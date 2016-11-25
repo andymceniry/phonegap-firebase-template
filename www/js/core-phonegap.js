@@ -35,8 +35,9 @@ var oApp = oApp || {};
             });
             break;
 
-        case 'camera':
-            oApp.pg.camera.getPicture()
+        case 'photo-camera':
+        case 'photo-gallery':
+            oApp.pg.camera.getPicture(test === 'photo-gallery')
                 .done(function (imageURI) {
                     console.log(imageURI);
                     $('#testCameraOutput').removeClass('hide').attr('src', imageURI);
@@ -118,7 +119,9 @@ var oApp = oApp || {};
 
     oApp.pg.camera = oApp.pg.camera || {};
 
-    oApp.pg.camera.getPicture = function () {
+    oApp.pg.camera.getPicture = function (camera) {
+
+        camera = camera !== false;
 
         var obj = {
             dfd: $.Deferred(),
@@ -127,15 +130,16 @@ var oApp = oApp || {};
             },
             error: function (error) {
                 obj.dfd.reject(error);
-            },
-            options: {
-                sourceType: Camera.PictureSourceType.PHOTOLIBRARY
             }
         };
 
         if (navigator.camera === undefined) {
             obj.dfd.reject('navigator.camera === undefined');
             return obj.dfd.promise();
+        }
+
+        obj.options = {
+            sourceType: camera ? Camera.PictureSourceType.CAMERA : Camera.PictureSourceType.PHOTOLIBRARY
         }
 
         navigator.camera.getPicture(obj.success, obj.error, obj.options);
