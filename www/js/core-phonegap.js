@@ -127,6 +127,9 @@ var oApp = oApp || {};
             },
             error: function (error) {
                 obj.dfd.reject(error);
+            },
+            options: {
+                sourceType: Camera.PictureSourceType.PHOTOLIBRARY
             }
         };
 
@@ -135,7 +138,7 @@ var oApp = oApp || {};
             return obj.dfd.promise();
         }
 
-        navigator.camera.getPicture(obj.success, obj.error);
+        navigator.camera.getPicture(obj.success, obj.error, obj.options);
 
         return obj.dfd.promise();
     };
