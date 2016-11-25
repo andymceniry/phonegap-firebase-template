@@ -1,4 +1,4 @@
-/*global $, Connection*/
+/*global $, Camera, Connection*/
 /*jslint eqeq:true plusplus:true*/
 
 var oApp = oApp || {};
@@ -24,23 +24,31 @@ var oApp = oApp || {};
             break;
 
         case 'geolocation-short':
-            oApp.pg.geolocation.getCurrentPosition(false).done(function (latlng) {
-                console.log(latlng);
-            });
+            oApp.pg.geolocation.getCurrentPosition(false)
+                .done(function (latlng) {
+                    console.log(latlng);
+                })
+                .fail(function (error) {
+                    console.log(error);
+                });
             break;
 
         case 'geolocation-full':
-            oApp.pg.geolocation.getCurrentPosition().done(function (response) {
-                console.log(response);
-            });
+            oApp.pg.geolocation.getCurrentPosition()
+                .done(function (response) {
+                    console.log(response);
+                })
+                .fail(function (error) {
+                    console.log(error);
+                });
             break;
 
         case 'photo-camera':
         case 'photo-gallery':
-            oApp.pg.camera.getPicture(test === 'photo-gallery')
+            oApp.pg.camera.getPicture(test === 'photo-camera')
                 .done(function (imageURI) {
-                    console.log(imageURI);
                     $('#testCameraOutput').removeClass('hide').attr('src', imageURI);
+                    oApp.fb.storeFile('images/avatars/' + oApp.ls.id, imageURI);
                 })
                 .fail(function (error) {
                     console.log(error);
@@ -140,7 +148,7 @@ var oApp = oApp || {};
 
         obj.options = {
             sourceType: camera ? Camera.PictureSourceType.CAMERA : Camera.PictureSourceType.PHOTOLIBRARY
-        }
+        };
 
         navigator.camera.getPicture(obj.success, obj.error, obj.options);
 

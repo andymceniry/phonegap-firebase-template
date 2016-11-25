@@ -7,6 +7,8 @@ var oApp = oApp || {};
 
 	'use strict';
 
+    oApp.storage.name = 'phonegap-firebase-template';
+
     oApp.initApp = function (phonegapAvailable) {
 
         oApp.phonegapAvailable = phonegapAvailable !== false;
@@ -31,11 +33,11 @@ var oApp = oApp || {};
     oApp.initFirebase = function () {
 
         var config = {
-            apiKey: "AIzaSyBpnArTxWPmqfAkAETrZD6GCLCohFFNH6Y",
-            authDomain: "fir-test-f461d.firebaseapp.com",
-            databaseURL: "https://fir-test-f461d.firebaseio.com",
-            storageBucket: "fir-test-f461d.appspot.com",
-            messagingSenderId: "584262174821"
+            apiKey: "AIzaSyCVpw804Nrmyn6N8idPnqVWtBK5b0wvBZ8",
+            authDomain: "phonegap-firebase-template.firebaseapp.com",
+            databaseURL: "https://phonegap-firebase-template.firebaseio.com",
+            storageBucket: "gs://phonegap-firebase-template.appspot.com",
+            messagingSenderId: "534493340673"
         };
 
         console.groupCollapsed('Firebase setup');
@@ -44,7 +46,7 @@ var oApp = oApp || {};
         console.groupEnd('Firebase setup');
 
         firebase.initializeApp(config);
-
+        oApp.init();
     };
 
 }());

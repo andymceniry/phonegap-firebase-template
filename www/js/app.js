@@ -7,4 +7,25 @@ var oApp = oApp || {};
 
 	'use strict';
 
+    oApp.init = function () {
+        console.log('initialising app');
+
+        oApp.ls = oApp.storage.get(oApp.storage.name) || oApp.getAndSetDefaultStorageObject();
+        oApp.storage.set(oApp.storage.name, oApp.ls);
+
+    };
+
+    oApp.getAndSetDefaultStorageObject = function () {
+
+        var obj = {
+            id: (new Date()).getTime()
+        };
+
+        oApp.storage.set(oApp.storage.name, obj);
+
+        return obj;
+
+    };
+
+
 }());

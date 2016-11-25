@@ -11,6 +11,50 @@ var oApp = oApp || {};
         $(this).toggleClass('open');
     });
 
+    oApp.storage = {};
+
+    oApp.storage.set = function (key, value, session) {
+
+        if (key === undefined) {
+            console.warn('Need to specify a key to store');
+            return false;
+        }
+        if (value === undefined) {
+            console.warn('Need to specify a value to store');
+            return false;
+        }
+
+        if (session === true) {
+            sessionStorage.setItem(key, JSON.stringify(value));
+        } else {
+            localStorage.setItem(key, JSON.stringify(value));
+        }
+        return true;
+
+    };
+
+    oApp.storage.get = function (key, session) {
+
+        var value;
+
+        if (key === undefined) {
+            console.warn('Need to specify a storage key to retrieve');
+            return false;
+        }
+
+        if (session === true) {
+            value = sessionStorage.getItem(key, JSON.stringify(value));
+        } else {
+            value = localStorage.getItem(key, JSON.stringify(value));
+        }
+
+        if (value === undefined || value === null) {
+            return false;
+        }
+        return JSON.parse(value);
+
+    };
+
     oApp.initLogger = function () {
         console.log = function () {
 
