@@ -62,5 +62,8 @@ var oApp = oApp || {};
 
     });
 
+    $('body').on('click', '.jsClickToHide', function() {
+        $(this).addClass('hide');
+    });
 
 }());

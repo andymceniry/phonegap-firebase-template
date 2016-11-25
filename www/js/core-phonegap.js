@@ -35,7 +35,21 @@ var oApp = oApp || {};
             });
             break;
 
+        case 'camera':
+            oApp.pg.camera.getPicture()
+                .done(function (imageURI) {
+                    console.log(imageURI);
+                    $('#testCameraOutput').removeClass('hide').attr('src', imageURI);
+                })
+                .fail(function (error) {
+                    console.log(error);
+                });
+            break;
+
         }
+
+
+
 
     };
 
@@ -99,6 +113,31 @@ var oApp = oApp || {};
 
         return dfd.promise();
 
+    };
+
+
+    oApp.pg.camera = oApp.pg.camera || {};
+
+    oApp.pg.camera.getPicture = function () {
+
+        var obj = {
+            dfd: $.Deferred(),
+            success: function (imageURI) {
+                obj.dfd.resolve(imageURI);
+            },
+            error: function (error) {
+                obj.dfd.reject(error);
+            }
+        };
+
+        if (navigator.camera === undefined) {
+            obj.dfd.reject('navigator.camera === undefined');
+            return obj.dfd.promise();
+        }
+
+        navigator.camera.getPicture(obj.success, obj.error);
+
+        return obj.dfd.promise();
     };
 
 }());
