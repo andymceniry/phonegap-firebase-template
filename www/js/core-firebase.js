@@ -9,16 +9,14 @@ var oApp = oApp || {};
 
     oApp.fb = oApp.fb || {};
 
-    oApp.fb.storeFile = function (location, file) {
+    oApp.fb.storeBase64 = function (location, base64) {
 
-        var storage = firebase.storage();
+        var storage = firebase.storage(),
+            storageRef = storage.ref(),
+            imagesRef = storageRef.child(location);
 
-        var storageRef = storage.ref();
-
-        var imagesRef = storageRef.child(location + '/' + file);
-
-        imagesRef.put(file).then(function(snapshot) {
-            console.log('Uploaded a blob or file!');
+        imagesRef.putString(base64, 'base64').then(function (snapshot) {
+            console.log('Uploaded a base64 string!');
             console.log(snapshot);
         });
     };

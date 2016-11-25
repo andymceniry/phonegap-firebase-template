@@ -46,9 +46,9 @@ var oApp = oApp || {};
         case 'photo-camera':
         case 'photo-gallery':
             oApp.pg.camera.getPicture(test === 'photo-camera')
-                .done(function (imageURI) {
-                    $('#testCameraOutput').removeClass('hide').attr('src', imageURI);
-                    oApp.fb.storeFile('images/avatars/' + oApp.ls.id, imageURI);
+                .done(function (imageData) {
+                    $('#testCameraOutput').removeClass('hide').attr('src', 'data:image/jpeg;base64,' + imageData);
+                    oApp.fb.storeBase64('images/avatars/' + oApp.ls.id);
                 })
                 .fail(function (error) {
                     console.log(error);
@@ -147,7 +147,8 @@ var oApp = oApp || {};
         }
 
         obj.options = {
-            sourceType: camera ? Camera.PictureSourceType.CAMERA : Camera.PictureSourceType.PHOTOLIBRARY
+            sourceType: camera ? Camera.PictureSourceType.CAMERA : Camera.PictureSourceType.PHOTOLIBRARY,
+            destinationType: Camera.DestinationType.DATA_URL
         };
 
         navigator.camera.getPicture(obj.success, obj.error, obj.options);
