@@ -17,10 +17,11 @@ var oApp = oApp || {};
 
         console.log('fb storing "' + location + '"');
 
-        var uploadTask = imagesRef.putString(base64, 'base64').then(function (snapshot) {
-            console.log('Uploaded a base64 string!');
-            console.log(snapshot);
-        });
+        var uploadTask = imagesRef.putString(base64, 'base64');
+// .then(function (snapshot) {
+            // console.log('Uploaded a base64 string!');
+            // console.log(snapshot);
+        // });
 
 uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
   function(snapshot) {
