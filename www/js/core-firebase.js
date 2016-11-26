@@ -8,6 +8,9 @@ var oApp = oApp || {};
 	'use strict';
 
     oApp.fb = oApp.fb || {
+        auth: {
+            password: {}
+        },
         storage: {}
     };
 
@@ -18,6 +21,19 @@ var oApp = oApp || {};
             string;
 
         switch (test) {
+
+        case 'authentication-password':
+            var email = prompt('Enter email');
+            if (email == '' || email == null) {
+                return false;
+            }
+            var password = prompt('Enter password');
+            if (password == '' || password == null) {
+                return false;
+            }
+            task = oApp.fb.auth.password.register(email, password);
+            oApp.outputTestResults(task);
+            break;
 
         case 'storage-string':
             string = prompt('Enter some content for file');
@@ -96,6 +112,21 @@ var oApp = oApp || {};
             obj.dfd.resolve(snapshot);
         });
         oApp.fb.storage.monitor(task);
+
+        return obj.dfd.promise();
+
+    };
+
+    oApp.fb.auth.password.register = function (email, password) {
+
+        var obj = oApp.getDefaultTestObject(),
+            task = firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then(function (snapshot) {
+                obj.dfd.resolve(snapshot);
+            })
+            .catch(function(error) {
+                obj.dfd.reject(error);
+            });
 
         return obj.dfd.promise();
 
