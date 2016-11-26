@@ -9,19 +9,40 @@ var oApp = oApp || {};
 
     oApp.fb = oApp.fb || {};
 
+    oApp.fb.outputTestResults = function (test) {
+        test.done(function (snapshot) {
+            console.log(snapshot);
+        })
+            .fail(function (error) {
+                console.log(error);
+            });
+    };
+
+
+
     oApp.fb.runTest = function (test) {
+
+        var ts = (new Date()).getTime(),
+            task,
+            string;
 
         switch (test) {
 
         case 'storage-string':
-            var file = (new Date()).getTime() + '.txt',
-                string = prompt('Enter some content for file');
+            string = prompt('Enter some content for file');
             if (string == '' || string == null) {
                 return false;
             }
-            oApp.fb.storage.putString(file, string)
-                .done(function (snapshot) {
-                    console.log(snapshot);
+            task = oApp.fb.storage.putString(ts + '.txt', string);
+            oApp.fb.outputTestResults(task);
+
+            break;
+
+        case 'storage-image':
+            oApp.pg.camera.getPicture()
+                .done(function (imageData) {
+                    task = oApp.fb.storeBase64(ts + '.jpg', imageData);
+                    oApp.fb.outputTestResults(task);
                 })
                 .fail(function (error) {
                     console.log(error);
@@ -69,10 +90,6 @@ var oApp = oApp || {};
 
     oApp.fb.storeBase64 = function (file, base64) {
 
-        console.log('fb storing "' + file + '"');
-
-        //base64 = '5b6p5Y+344GX44G+44GX44Gf77yB44GK44KB44Gn44Go44GG77yB';
-
         var obj = {
             dfd: $.Deferred(),
             success: function (snapshot) {
@@ -92,8 +109,6 @@ var oApp = oApp || {};
         oApp.fb.storage.monitor(task);
 
         return obj.dfd.promise();
-
-
 
     };
 
