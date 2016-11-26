@@ -57,9 +57,6 @@ var oApp = oApp || {};
 
         }
 
-
-
-
     };
 
     oApp.pg.geolocation = oApp.pg.geolocation || {};

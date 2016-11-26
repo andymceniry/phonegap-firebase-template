@@ -9,6 +9,71 @@ var oApp = oApp || {};
 
     oApp.fb = oApp.fb || {};
 
+    oApp.fb.runTest = function (test) {
+
+        switch (test) {
+
+        case 'storage-string':
+            var file = (new Date()).getTime() + '.txt';
+            var string = prompt('Enter some content for file');
+            if (string == '' || string == null) {
+                return false;
+            }
+            console.log(file, string);
+            oApp.fb.storage.putString(file, string)
+                .done(function (connection) {
+                    console.log(connection);
+                })
+                .fail(function (error) {
+                    console.log(error);
+                });
+            break;
+
+        }
+
+    };
+
+    oApp.fb.storage = oApp.fb.storage || {};
+
+    oApp.fb.storage.putString = function (file, string) {
+
+        var obj = {
+            dfd: $.Deferred(),
+            success: function (position) {
+                if (allData === false) {
+                    obj.dfd.resolve({latitude: position.coords.latitude.toFixed(decimalPlaces), longitude: position.coords.longitude.toFixed(decimalPlaces)});
+                } else {
+                    obj.dfd.resolve(position);
+                }
+            },
+            error: function (error) {
+                obj.dfd.reject(error);
+            }
+        };
+
+        var ref = firebase.storage().ref().child(file);
+
+        ref.putString('test').then(function(snapshot) {
+            obj.dfd.resolve(snapshot);
+        });
+
+        return obj.dfd.promise();
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     oApp.fb.storeBase64 = function (location, base64) {
 
         var storage = firebase.storage(),
