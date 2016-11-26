@@ -7,48 +7,38 @@ var oApp = oApp || {};
 
 	'use strict';
 
-    oApp.pg = oApp.pg || {};
+    oApp.pg = oApp.pg || {
+        camera: {},
+        connection: {},
+        geolocation: {}
+    };
 
     oApp.pg.runTest = function (test) {
+
+        var task = null;
 
         switch (test) {
 
         case 'connection':
-            oApp.pg.connection.getDetails()
-                .done(function (connection) {
-                    console.log(connection);
-                })
-                .fail(function (error) {
-                    console.log(error);
-                });
+            task = oApp.pg.connection.getDetails();
+            oApp.outputTestResults(task);
             break;
 
         case 'geolocation-short':
-            oApp.pg.geolocation.getCurrentPosition(false)
-                .done(function (latlng) {
-                    console.log(latlng);
-                })
-                .fail(function (error) {
-                    console.log(error);
-                });
+            task = oApp.pg.geolocation.getCurrentPosition(false);
+            oApp.outputTestResults(task);
             break;
 
         case 'geolocation-full':
-            oApp.pg.geolocation.getCurrentPosition()
-                .done(function (response) {
-                    console.log(response);
-                })
-                .fail(function (error) {
-                    console.log(error);
-                });
+            task = oApp.pg.geolocation.getCurrentPosition();
+            oApp.outputTestResults(task);
             break;
 
-        case 'photo-camera':
-        case 'photo-gallery':
-            oApp.pg.camera.getPicture(test === 'photo-camera')
+        case 'camera-photo':
+        case 'camera-gallery':
+            oApp.pg.camera.getPicture(test === 'camera-photo')
                 .done(function (imageData) {
                     $('#testCameraOutput').removeClass('hide').attr('src', 'data:image/jpeg;base64,' + imageData);
-                    oApp.fb.storeBase64(oApp.ls.id + '.jpg', imageData);
                 })
                 .fail(function (error) {
                     console.log(error);
@@ -59,24 +49,18 @@ var oApp = oApp || {};
 
     };
 
-    oApp.pg.geolocation = oApp.pg.geolocation || {};
-
     oApp.pg.geolocation.getCurrentPosition = function (allData, decimalPlaces) {
 
-        allData = allData !== false;
-        decimalPlaces = decimalPlaces || 4;
+        var obj = oApp.getDefaultTestObject();
 
-        var obj = {
-            dfd: $.Deferred(),
-            success: function (position) {
-                if (allData === false) {
-                    obj.dfd.resolve({latitude: position.coords.latitude.toFixed(decimalPlaces), longitude: position.coords.longitude.toFixed(decimalPlaces)});
-                } else {
-                    obj.dfd.resolve(position);
-                }
-            },
-            error: function (error) {
-                obj.dfd.reject(error);
+        obj.allData = allData !== false;
+        obj.decimalPlaces = decimalPlaces || 4;
+
+        obj.success = function (position) {
+            if (obj.allData === false) {
+                obj.dfd.resolve({latitude: position.coords.latitude.toFixed(obj.decimalPlaces), longitude: position.coords.longitude.toFixed(obj.decimalPlaces)});
+            } else {
+                obj.dfd.resolve(position);
             }
         };
 
@@ -85,22 +69,15 @@ var oApp = oApp || {};
         return obj.dfd.promise();
     };
 
-    oApp.pg.connection = oApp.pg.connection || {};
-
     oApp.pg.connection.getDetails = function () {
 
-        var dfd = $.Deferred(),
+        var obj = oApp.getDefaultTestObject(),
             networkState,
             states;
 
-        if (navigator === undefined) {
-            dfd.reject('navigator === undefined');
-            return dfd.promise();
-        }
-
         if (navigator.connection === undefined) {
-            dfd.reject('navigator.connection === undefined');
-            return dfd.promise();
+            obj.dfd.reject('navigator.connection === undefined');
+            return obj.dfd.promise();
         }
 
         networkState = navigator.connection.type;
@@ -115,28 +92,17 @@ var oApp = oApp || {};
         states[Connection.CELL]     = 'Cell generic connection';
         states[Connection.NONE]     = 'No network connection';
 
-        dfd.resolve('Connection type: ' + states[networkState]);
+        obj.dfd.resolve('Connection type: ' + states[networkState]);
 
-        return dfd.promise();
+        return obj.dfd.promise();
 
     };
-
-
-    oApp.pg.camera = oApp.pg.camera || {};
 
     oApp.pg.camera.getPicture = function (camera) {
 
         camera = camera !== false;
 
-        var obj = {
-            dfd: $.Deferred(),
-            success: function (imageURI) {
-                obj.dfd.resolve(imageURI);
-            },
-            error: function (error) {
-                obj.dfd.reject(error);
-            }
-        };
+        var obj = oApp.getDefaultTestObject();
 
         if (navigator.camera === undefined) {
             obj.dfd.reject('navigator.camera === undefined');

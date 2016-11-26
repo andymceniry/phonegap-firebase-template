@@ -7,18 +7,9 @@ var oApp = oApp || {};
 
 	'use strict';
 
-    oApp.fb = oApp.fb || {};
-
-    oApp.fb.outputTestResults = function (test) {
-        test.done(function (snapshot) {
-            console.log(snapshot);
-        })
-            .fail(function (error) {
-                console.log(error);
-            });
+    oApp.fb = oApp.fb || {
+        storage: {}
     };
-
-
 
     oApp.fb.runTest = function (test) {
 
@@ -34,7 +25,7 @@ var oApp = oApp || {};
                 return false;
             }
             task = oApp.fb.storage.putString(ts + '.txt', string);
-            oApp.fb.outputTestResults(task);
+            oApp.outputTestResults(task);
 
             break;
 
@@ -42,7 +33,7 @@ var oApp = oApp || {};
             oApp.pg.camera.getPicture(false)
                 .done(function (imageData) {
                     task = oApp.fb.storeBase64(ts + '.jpg', imageData);
-                    oApp.fb.outputTestResults(task);
+                    oApp.outputTestResults(task);
                 })
                 .fail(function (error) {
                     console.log(error);
@@ -53,12 +44,20 @@ var oApp = oApp || {};
 
     };
 
-    oApp.fb.storage = oApp.fb.storage || {};
+    oApp.outputTestResults = function (test) {
+        test
+            .done(function (success) {
+                console.log(success);
+            })
+            .fail(function (error) {
+                console.log(error);
+            });
+    };
 
     oApp.fb.storage.monitor = function (task) {
         task.on(firebase.storage.TaskEvent.STATE_CHANGED, function (snapshot) {
             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log('Upload is ' + progress + '% done');
+            console.log('Upload is ' + progress.toFixed(2) + '% done');
         }, function (error) {
             console.log('Error: ', error);
         }, function () {
@@ -70,8 +69,8 @@ var oApp = oApp || {};
 
         var obj = {
             dfd: $.Deferred(),
-            success: function (snapshot) {
-                obj.dfd.resolve(snapshot);
+            success: function (success) {
+                obj.dfd.resolve(success);
             },
             error: function (error) {
                 obj.dfd.reject(error);
@@ -80,8 +79,8 @@ var oApp = oApp || {};
             ref = firebase.storage().ref().child(file),
             task = ref.putString(string);
 
-        task.then(function (snapshot) {
-            obj.dfd.resolve(snapshot);
+        task.then(function (success) {
+            obj.dfd.resolve(success);
         });
         oApp.fb.storage.monitor(task);
 

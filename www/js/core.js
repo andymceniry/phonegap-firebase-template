@@ -84,6 +84,18 @@ var oApp = oApp || {};
         };
     };
 
+    oApp.getDefaultTestObject = function () {
+        return {
+            dfd: $.Deferred(),
+            success: function (success) {
+                this.dfd.resolve(success);
+            },
+            error: function (error) {
+                this.dfd.reject(error);
+            }
+        };
+    };
+
     $('ul#divTests li').click(function () {
 
         var el = $(this),
@@ -106,7 +118,7 @@ var oApp = oApp || {};
 
     });
 
-    $('body').on('click', '.jsClickToHide', function() {
+    $('body').on('click', '.jsClickToHide', function () {
         $(this).addClass('hide');
     });
 
