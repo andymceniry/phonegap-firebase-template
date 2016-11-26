@@ -17,6 +17,8 @@ var oApp = oApp || {};
 
         console.log('fb storing "' + location + '"');
 
+base64 = '5b6p5Y+344GX44G+44GX44Gf77yB44GK44KB44Gn44Go44GG77yB';
+
         var uploadTask = imagesRef.putString(base64, 'base64');
 // .then(function (snapshot) {
             // console.log('Uploaded a base64 string!');
