@@ -71,7 +71,7 @@ var oApp = oApp || {};
 
         console.log('fb storing "' + file + '"');
 
-        base64 = '5b6p5Y+344GX44G+44GX44Gf77yB44GK44KB44Gn44Go44GG77yB';
+        //base64 = '5b6p5Y+344GX44G+44GX44Gf77yB44GK44KB44Gn44Go44GG77yB';
 
         var obj = {
             dfd: $.Deferred(),
