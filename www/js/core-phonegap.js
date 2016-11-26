@@ -48,7 +48,7 @@ var oApp = oApp || {};
             oApp.pg.camera.getPicture(test === 'photo-camera')
                 .done(function (imageData) {
                     $('#testCameraOutput').removeClass('hide').attr('src', 'data:image/jpeg;base64,' + imageData);
-                    oApp.fb.storeBase64('images/avatars/' + oApp.ls.id, imageData);
+                    oApp.fb.storeBase64('images/avatars/' + oApp.ls.id + '.jpg', imageData);
                 })
                 .fail(function (error) {
                     console.log(error);
