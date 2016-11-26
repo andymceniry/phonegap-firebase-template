@@ -18,4 +18,4 @@ ul li a { font-size: 12px; color:#fff !important; }
 
 #log { position: absolute; background: rgba(0,0,0,0.95); width: 100%; height: 6%; line-height: 20px; bottom: 0; left: 0; padding: 10px; font-size: 12px; overflow-y: auto; color: #ccc; }
 #log.open { height: 100%; }
-
+#log .groupName { font-weight:bold; color:#ff0; }

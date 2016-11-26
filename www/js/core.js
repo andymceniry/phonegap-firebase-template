@@ -60,7 +60,8 @@ var oApp = oApp || {};
 
             var i,
                 j = arguments.length,
-                item;
+                item,
+                json;
 
             for (i = 0; i < j; i++) {
 
@@ -71,7 +72,7 @@ var oApp = oApp || {};
                     $('#log').append(item);
                     break;
                 case 'object':
-                    var json = JSON.stringify(item);
+                    json = JSON.stringify(item);
                     json = json.substr(1, json.length - 2);
                     json = json.split(',"').join('<br/>"');
                     json = json.split('":').join('" : ');
@@ -90,6 +91,11 @@ var oApp = oApp || {};
         console.clear = function () {
             $('#log').html('');
         };
+
+        console.groupCollapsed = function (groupName) {
+            $('#log').append('<span class="groupName">' + groupName + '</span><br/>');
+        };
+
     };
 
     oApp.getDefaultTestObject = function () {
@@ -131,10 +137,11 @@ var oApp = oApp || {};
 
         var el = $(this),
             type = el.data('type'),
-            item = el.data('item');
+            item = el.data('item'),
+            groupName = type + ' ' + item;
 
         console.clear();
-        console.log('> test "' + type + ' ' + item + '"');
+        console.groupCollapsed(groupName);
 
         switch (type) {
 
@@ -153,5 +160,29 @@ var oApp = oApp || {};
     $('body').on('click', '.jsClickToHide', function () {
         $(this).addClass('hide');
     });
+
+    oApp.handleAuthChange = function (user) {
+        console.groupEnd();
+
+        if (user) {
+            console.groupCollapsed('User: ' + user.email);
+            console.log(oApp.getEssentialUserData(user));
+            console.groupEnd('User');
+        } else {
+            console.log('User: Nobody is signed in');
+        }
+
+    };
+
+    oApp.getEssentialUserData = function (user) {
+
+        return {
+            'email': user.email,
+            'name': user.displayName,
+            'photoUrl': user.photoURL,
+            'uid': user.uid
+        };
+
+    };
 
 }());

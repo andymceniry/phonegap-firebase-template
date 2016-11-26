@@ -27,7 +27,7 @@ var oApp = oApp || {};
 
         $('#divTests').removeClass('hide');
         oApp.initFirebase();
-
+        oApp.init();
     };
 
     oApp.initFirebase = function () {
@@ -46,7 +46,7 @@ var oApp = oApp || {};
         console.groupEnd('Firebase setup');
 
         firebase.initializeApp(config);
-        oApp.init();
+        oApp.fb.auth.setUpListener();
     };
 
 }());

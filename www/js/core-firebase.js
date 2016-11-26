@@ -9,7 +9,8 @@ var oApp = oApp || {};
 
     oApp.fb = oApp.fb || {
         auth: {
-            password: {}
+            register: {},
+            signin: {}
         },
         storage: {}
     };
@@ -17,21 +18,47 @@ var oApp = oApp || {};
     oApp.fb.runTest = function (test) {
 
         var ts = (new Date()).getTime(),
+            email,
+            password,
+            response,
             task,
             string;
 
         switch (test) {
 
-        case 'authentication-password':
-            var email = prompt('Enter email');
+        case 'authentication-register-password':
+            email = prompt('Enter email');
             if (email == '' || email == null) {
                 return false;
             }
-            var password = prompt('Enter password');
+            password = prompt('Enter password');
             if (password == '' || password == null) {
                 return false;
             }
-            task = oApp.fb.auth.password.register(email, password);
+            task = oApp.fb.auth.register.password(email, password);
+            oApp.outputTestResults(task);
+            break;
+
+        case 'authentication-signin-password':
+            email = prompt('Enter email');
+            if (email == '' || email == null) {
+                return false;
+            }
+            password = prompt('Enter password');
+            if (password == '' || password == null) {
+                return false;
+            }
+            task = oApp.fb.auth.signin.password(email, password);
+            oApp.outputTestResults(task);
+            break;
+
+        case 'authentication-signout':
+            response = confirm('Sign out - Are you sure?');
+            if (response !== true) {
+                return false;
+            }
+
+            task = oApp.fb.auth.signout();
             oApp.outputTestResults(task);
             break;
 
@@ -97,8 +124,8 @@ var oApp = oApp || {};
 
         var obj = {
             dfd: $.Deferred(),
-            success: function (snapshot) {
-                obj.dfd.resolve(snapshot);
+            success: function (success) {
+                obj.dfd.resolve(success);
             },
             error: function (error) {
                 obj.dfd.reject(error);
@@ -108,8 +135,8 @@ var oApp = oApp || {};
             ref = firebase.storage().ref().child(file),
             task = ref.putString(base64, 'base64');
 
-        task.then(function (snapshot) {
-            obj.dfd.resolve(snapshot);
+        task.then(function (success) {
+            obj.dfd.resolve(success);
         });
         oApp.fb.storage.monitor(task);
 
@@ -117,14 +144,55 @@ var oApp = oApp || {};
 
     };
 
-    oApp.fb.auth.password.register = function (email, password) {
+    oApp.fb.auth.setUpListener = function () {
 
-        var obj = oApp.getDefaultTestObject(),
-            task = firebase.auth().createUserWithEmailAndPassword(email, password)
-            .then(function (snapshot) {
-                obj.dfd.resolve(snapshot);
+        firebase.auth().onAuthStateChanged(function (user) {
+            oApp.handleAuthChange(user);
+        });
+
+    };
+
+    oApp.fb.auth.register.password = function (email, password) {
+
+        var obj = oApp.getDefaultTestObject();
+
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then(function (success) {
+                obj.dfd.resolve(success);
             })
-            .catch(function(error) {
+            .catch(function (error) {
+                obj.dfd.reject(error);
+            });
+
+        return obj.dfd.promise();
+
+    };
+
+    oApp.fb.auth.signin.password = function (email, password) {
+
+        var obj = oApp.getDefaultTestObject();
+
+        firebase.auth().signInWithEmailAndPassword(email, password)
+            .then(function (success) {
+                obj.dfd.resolve(success);
+            })
+            .catch(function (error) {
+                obj.dfd.reject(error);
+            });
+
+        return obj.dfd.promise();
+
+    };
+
+    oApp.fb.auth.signout = function () {
+
+        var obj = oApp.getDefaultTestObject();
+
+        firebase.auth().signOut()
+            .then(function (success) {
+                obj.dfd.resolve(success);
+            })
+            .catch(function (error) {
                 obj.dfd.reject(error);
             });
 
