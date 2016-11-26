@@ -14,7 +14,7 @@ var oApp = oApp || {};
         oApp.phonegapAvailable = phonegapAvailable !== false;
 
         //  if we are in phonegap then show on-screen logging else remove the div
-        if (oApp.phonegapAvailable !== false) {
+        if (oApp.phonegapAvailable === false) {
             $('#log').remove();
             $('#divPhonegapReg').html('Phonegap is not available :-(');
             console.log('no phonegap');
