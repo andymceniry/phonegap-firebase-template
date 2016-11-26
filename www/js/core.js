@@ -71,7 +71,11 @@ var oApp = oApp || {};
                     $('#log').append(item);
                     break;
                 case 'object':
-                    $('#log').append(JSON.stringify(item));
+                    var json = JSON.stringify(item);
+                    json = json.substr(1, json.length - 2);
+                    json = json.split(',"').join('<br/>"');
+                    json = json.split('":').join('" : ');
+                    $('#log').append(json);
                     break;
                 default:
                     $('#log').append(typeof item);
@@ -81,6 +85,10 @@ var oApp = oApp || {};
                 $('#log').append('<br/>');
 
             }
+        };
+
+        console.clear = function () {
+            $('#log').html('');
         };
     };
 
@@ -102,13 +110,31 @@ var oApp = oApp || {};
 
     };
 
+    oApp.outputTestResults = function (test, autoShow) {
+
+        autoShow = autoShow === true;
+
+        test
+            .done(function (success) {
+                console.log(success);
+            })
+            .fail(function (error) {
+                console.log(error);
+            });
+
+        if (autoShow) {
+            $('#log').addClass('open');
+        }
+    };
+
     $('ul#divTests li').click(function () {
 
         var el = $(this),
             type = el.data('type'),
             item = el.data('item');
 
-        console.log('testing: ' + type + ' ' + item);
+        console.clear();
+        console.log('> test "' + type + ' ' + item + '"');
 
         switch (type) {
 

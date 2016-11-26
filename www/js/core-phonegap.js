@@ -21,17 +21,17 @@ var oApp = oApp || {};
 
         case 'connection':
             task = oApp.pg.connection.getDetails();
-            oApp.outputTestResults(task);
+            oApp.outputTestResults(task, true);
             break;
 
         case 'geolocation-short':
             task = oApp.pg.geolocation.getCurrentPosition(false);
-            oApp.outputTestResults(task);
+            oApp.outputTestResults(task, true);
             break;
 
         case 'geolocation-full':
             task = oApp.pg.geolocation.getCurrentPosition();
-            oApp.outputTestResults(task);
+            oApp.outputTestResults(task, true);
             break;
 
         case 'camera-photo':
@@ -60,7 +60,7 @@ var oApp = oApp || {};
             if (obj.allData === false) {
                 obj.dfd.resolve({latitude: position.coords.latitude.toFixed(obj.decimalPlaces), longitude: position.coords.longitude.toFixed(obj.decimalPlaces)});
             } else {
-                obj.dfd.resolve(position);
+                obj.dfd.resolve($.extend({}, position.coords));
             }
         };
 

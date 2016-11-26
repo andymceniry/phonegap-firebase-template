@@ -44,16 +44,6 @@ var oApp = oApp || {};
 
     };
 
-    oApp.outputTestResults = function (test) {
-        test
-            .done(function (success) {
-                console.log(success);
-            })
-            .fail(function (error) {
-                console.log(error);
-            });
-    };
-
     oApp.fb.storage.monitor = function (task) {
         task.on(firebase.storage.TaskEvent.STATE_CHANGED, function (snapshot) {
             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
