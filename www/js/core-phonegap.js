@@ -13,42 +13,6 @@ var oApp = oApp || {};
         geolocation: {}
     };
 
-    oApp.pg.runTest = function (test) {
-
-        var task = null;
-
-        switch (test) {
-
-        case 'connection':
-            task = oApp.pg.connection.getDetails();
-            oApp.outputTestResults(task, true);
-            break;
-
-        case 'geolocation-short':
-            task = oApp.pg.geolocation.getCurrentPosition(false);
-            oApp.outputTestResults(task, true);
-            break;
-
-        case 'geolocation-full':
-            task = oApp.pg.geolocation.getCurrentPosition();
-            oApp.outputTestResults(task, true);
-            break;
-
-        case 'camera-photo':
-        case 'camera-gallery':
-            oApp.pg.camera.getPicture(test === 'camera-photo')
-                .done(function (imageData) {
-                    $('#testCameraOutput').removeClass('hide').attr('src', 'data:image/jpeg;base64,' + imageData);
-                })
-                .fail(function (error) {
-                    console.log(error);
-                });
-            break;
-
-        }
-
-    };
-
     oApp.pg.geolocation.getCurrentPosition = function (allData, decimalPlaces) {
 
         var obj = oApp.getDefaultTestObject();

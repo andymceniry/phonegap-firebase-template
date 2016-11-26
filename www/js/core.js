@@ -138,7 +138,7 @@ var oApp = oApp || {};
         var el = $(this),
             type = el.data('type'),
             item = el.data('item'),
-            groupName = type + ' ' + item;
+            groupName = type + ': ' + item.split('-').join(' ');
 
         console.clear();
         console.groupCollapsed(groupName);

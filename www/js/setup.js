@@ -49,4 +49,113 @@ var oApp = oApp || {};
         oApp.fb.auth.setUpListener();
     };
 
+
+    oApp.pg.runTest = function (test) {
+
+        var task = null;
+
+        switch (test) {
+
+        case 'connection':
+            task = oApp.pg.connection.getDetails();
+            oApp.outputTestResults(task, true);
+            break;
+
+        case 'geolocation-short':
+            task = oApp.pg.geolocation.getCurrentPosition(false);
+            oApp.outputTestResults(task, true);
+            break;
+
+        case 'geolocation-full':
+            task = oApp.pg.geolocation.getCurrentPosition();
+            oApp.outputTestResults(task, true);
+            break;
+
+        case 'camera-photo':
+        case 'camera-gallery':
+            oApp.pg.camera.getPicture(test === 'camera-photo')
+                .done(function (imageData) {
+                    $('#testCameraOutput').removeClass('hide').attr('src', 'data:image/jpeg;base64,' + imageData);
+                })
+                .fail(function (error) {
+                    console.log(error);
+                });
+            break;
+
+        }
+
+    };
+
+    oApp.fb.runTest = function (test) {
+
+        var ts = (new Date()).getTime(),
+            email,
+            password,
+            response,
+            task,
+            string;
+
+        switch (test) {
+
+        case 'authentication-register-password':
+            email = prompt('Enter email');
+            if (email == '' || email == null) {
+                return false;
+            }
+            password = prompt('Enter password');
+            if (password == '' || password == null) {
+                return false;
+            }
+            task = oApp.fb.auth.register.password(email, password);
+            oApp.outputTestResults(task, true);
+            break;
+
+        case 'authentication-signin-password':
+            email = prompt('Enter email');
+            if (email == '' || email == null) {
+                return false;
+            }
+            password = prompt('Enter password');
+            if (password == '' || password == null) {
+                return false;
+            }
+            task = oApp.fb.auth.signin.password(email, password);
+            oApp.outputTestResults(task, true);
+            break;
+
+        case 'authentication-signout':
+            response = confirm('Sign out - Are you sure?');
+            if (response !== true) {
+                return false;
+            }
+
+            task = oApp.fb.auth.signout();
+            oApp.outputTestResults(task);
+            break;
+
+        case 'storage-string':
+            string = prompt('Enter some content for file');
+            if (string == '' || string == null) {
+                return false;
+            }
+            task = oApp.fb.storage.putString(ts + '.txt', string);
+            oApp.outputTestResults(task);
+
+            break;
+
+        case 'storage-image':
+            oApp.pg.camera.getPicture(false)
+                .done(function (imageData) {
+                    task = oApp.fb.storeBase64(ts + '.jpg', imageData);
+                    oApp.outputTestResults(task);
+                })
+                .fail(function (error) {
+                    console.log(error);
+                });
+            break;
+
+        }
+
+    };
+
 }());
