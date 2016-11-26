@@ -15,8 +15,8 @@ var oApp = oApp || {};
             storageRef = storage.ref(),
             imagesRef = storageRef.child(location);
 
-        imagesRef.putString(base64, 'base64url').then(function (snapshot) {
-            console.log('Uploaded a base64url string!');
+        imagesRef.putString(base64, 'base64').then(function (snapshot) {
+            console.log('Uploaded a base64 string!');
             console.log(snapshot);
         });
     };
