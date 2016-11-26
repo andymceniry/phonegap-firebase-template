@@ -85,15 +85,21 @@ var oApp = oApp || {};
     };
 
     oApp.getDefaultTestObject = function () {
-        return {
-            dfd: $.Deferred(),
-            success: function (success) {
-                this.dfd.resolve(success);
-            },
-            error: function (error) {
-                this.dfd.reject(error);
-            }
+
+        var defaultObj = {};
+
+        defaultObj.dfd = $.Deferred();
+
+        defaultObj.success = function (success) {
+            defaultObj.dfd.resolve(success);
         };
+
+        defaultObj.error = function (error) {
+            defaultObj.dfd.reject(error);
+        };
+
+        return defaultObj;
+
     };
 
     $('ul#divTests li').click(function () {
