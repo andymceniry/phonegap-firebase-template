@@ -39,7 +39,7 @@ var oApp = oApp || {};
             break;
 
         case 'storage-image':
-            oApp.pg.camera.getPicture()
+            oApp.pg.camera.getPicture(false)
                 .done(function (imageData) {
                     task = oApp.fb.storeBase64(ts + '.jpg', imageData);
                     oApp.fb.outputTestResults(task);
