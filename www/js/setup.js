@@ -179,6 +179,9 @@ var oApp = oApp || {};
                 var i,
                     items = data.val();
 
+            console.clear();
+            console.groupCollapsed('Messages');
+
                 for (i in items) {
                     if (items.hasOwnProperty(i)) {
                         console.log(oApp.php.date('d.m.y @ H:i:s', items[i].ts / 1000) + ': ' + items[i].message);
