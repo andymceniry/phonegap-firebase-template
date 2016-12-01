@@ -5,7 +5,7 @@
     <author email="andy@mceniry.me.uk">Andy McEniry</author>
     <icon src="icon.png" />
     <content src="index.html" />
-    <allow-navigation href="http://*/*" />
+    <allow-navigation href="*" />
     <gap:platform name="android" />
     <gap:plugin name="cordova-plugin-whitelist" source="npm" />
     <gap:plugin name="cordova-plugin-battery-status" source="npm" spec="~1.2.0" />

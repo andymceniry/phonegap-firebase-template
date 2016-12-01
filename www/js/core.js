@@ -199,7 +199,7 @@ var oApp = oApp || {};
         return false;
     };
 
-    oApp.onSignIn = function (googleUser) {
+    oApp.onSignIns = function (googleUser) {
         console.groupCollapsed('Google Auth Response');
         console.log(googleUser);
         var unsubscribe = firebase.auth().onAuthStateChanged(function (firebaseUser) {
