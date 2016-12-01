@@ -56,7 +56,7 @@ var oApp = oApp || {};
         states[Connection.CELL]     = 'Cell generic connection';
         states[Connection.NONE]     = 'No network connection';
 
-        obj.dfd.resolve('Connection type: ' + states[networkState]);
+        obj.dfd.resolve(states[networkState]);
 
         return obj.dfd.promise();
 

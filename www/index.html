@@ -10,6 +10,9 @@
         <meta name="description" content="">
         <meta content="True" name="HandheldFriendly">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="google-signin-client_id" content="499750290208-hh5hd6dr5bpdmiii9f152qv2ofiph7f8.apps.googleusercontent.com">
+        <meta name="google-signin-cookiepolicy" content="single_host_origin">
+        <meta name="google-signin-scope" content="profile email">
         <link rel="stylesheet" href="css/reset.css">
         <link rel="stylesheet" href="css/core.css"> 
         <link rel="stylesheet" href="css/app.css"> 
@@ -46,12 +49,15 @@
 
             </ul>
 
+<div class="g-signin2" data-onsuccess="oApp.onSignIn" data-theme="dark"></div>
+<a href="#" onclick="oApp.signOut();">Sign out</a>
             <img id="testCameraOutput" class="hide jsClickToHide" src=""/>
         </div>
 
         <pre id="log" class="hide"></pre>
 
         <script src="js/vendor/jquery-3.1.1.min.js"></script>
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
         <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
         <script src="js/core.js"></script>
         <script src="js/core-php.js"></script>
