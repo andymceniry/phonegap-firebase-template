@@ -12,6 +12,7 @@ var oApp = oApp || {};
             register: {},
             signin: {}
         },
+        db: {},
         storage: {}
     };
 
@@ -125,6 +126,25 @@ var oApp = oApp || {};
             });
 
         return obj.dfd.promise();
+
+    };
+
+    oApp.fb.db.addToList = function (path, data) {
+
+        var dbRef = oApp.fb.dbo.ref(path),
+            newPostRef = dbRef.push();
+
+        newPostRef.set(data);
+
+        return newPostRef;
+
+    };
+
+    oApp.fb.db.viewList = function (path, callback) {
+
+        var dbRef = oApp.fb.dbo.ref(path);
+
+        dbRef.on('value', callback);
 
     };
 

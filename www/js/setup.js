@@ -47,6 +47,7 @@ var oApp = oApp || {};
 
         firebase.initializeApp(config);
         oApp.fb.auth.setUpListener();
+        oApp.fb.dbo = firebase.database();
     };
 
 
@@ -89,6 +90,8 @@ var oApp = oApp || {};
     oApp.fb.runTest = function (test) {
 
         var ts = (new Date()).getTime(),
+            callback,
+            data,
             email,
             password,
             response,
@@ -152,6 +155,39 @@ var oApp = oApp || {};
                 .fail(function (error) {
                     console.log(error);
                 });
+            break;
+
+        case 'database-write':
+            string = prompt('Enter a message to store');
+            if (string == '' || string == null) {
+                return false;
+            }
+
+            data = {
+                id: firebase.auth().currentUser.uid,
+                ts: (new Date()).getTime(),
+                message: string
+            };
+
+            oApp.fb.db.addToList('messages/', data);
+
+            break;
+
+        case 'database-view':
+
+            callback = function (data) {
+                var i,
+                    items = data.val();
+
+                for (i in items) {
+                    if (items.hasOwnProperty(i)) {
+                        console.log(oApp.php.date('d.m.y @ H:i:s', items[i].ts / 1000) + ': ' + items[i].message);
+                    }
+                }
+            };
+
+            oApp.fb.db.viewList('messages/', callback);
+
             break;
 
         }
