@@ -1,1 +1,5 @@
 #testCameraOutput { width: 320px; min-height: 240px; position: absolute; top: 60px; left: 50%; margin-left: -160px; background: #fff; padding: 5px; border: 2px solid #333; }
+
+#divTests li.header { color:#900; }
+#divTests li b { display: inline-block; min-width:100px; }
+#divTests li span { display: inline-block; background: #ddd; padding: 0 10px; margin-right: 10px; border-radius: 3px; line-height: 20px; height: 20px; cursor: pointer; }

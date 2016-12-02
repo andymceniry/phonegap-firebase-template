@@ -133,8 +133,9 @@ var oApp = oApp || {};
         }
     };
 
-    $('ul#divTests li').click(function () {
+    $('ul#divTests li span').click(function () {
 
+console.log($(this));
         var el = $(this),
             type = el.data('type'),
             item = el.data('item'),
@@ -145,12 +146,16 @@ var oApp = oApp || {};
 
         switch (type) {
 
-        case 'phonegap':
+        case 'pg':
             oApp.pg.runTest(item);
             break;
 
-        case 'firebase':
+        case 'fb':
             oApp.fb.runTest(item);
+            break;
+
+        case 'pgfb':
+            oApp.pgfb.runTest(item);
             break;
 
         }

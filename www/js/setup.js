@@ -197,4 +197,19 @@ var oApp = oApp || {};
 
     };
 
+    oApp.pgfb.runTest = function (test) {
+
+        var task = null;
+
+        switch (test) {
+
+        case 'authentication-signin-google':
+            task = oApp.pgfb.googleSignIn();
+            oApp.outputTestResults(task, true);
+            break;
+
+        }
+
+    };
+
 }());
