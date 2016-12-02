@@ -135,7 +135,6 @@ var oApp = oApp || {};
 
     $('ul#divTests li span').click(function () {
 
-console.log($(this));
         var el = $(this),
             type = el.data('type'),
             item = el.data('item'),
@@ -188,50 +187,6 @@ console.log($(this));
             'uid': user.uid
         };
 
-    };
-
-
-
-
-    oApp.isUserEqual = function (googleUser, firebaseUser) {
-        if (firebaseUser) {
-            var providerData = firebaseUser.providerData,
-                i;
-
-            for (i = 0; i < providerData.length; i++) {
-                if (providerData[i].providerId === firebase.auth.GoogleAuthProvider.PROVIDER_ID && providerData[i].uid === googleUser.getBasicProfile().getId()) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    };
-
-    oApp.onSignIns = function (googleUser) {
-        console.groupCollapsed('Google Auth Response');
-        console.log(googleUser);
-        var unsubscribe = firebase.auth().onAuthStateChanged(function (firebaseUser) {
-            unsubscribe();
-            if (!oApp.isUserEqual(googleUser, firebaseUser)) {
-                var credential = firebase.auth.GoogleAuthProvider.credential(
-                    googleUser.getAuthResponse().id_token
-                );
-                firebase.auth().signInWithCredential(credential)
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-            } else {
-                console.log('User already signed-in Firebase.');
-            }
-        });
-    };
-
-    oApp.signOut = function () {
-        console.log('signOut');
-        var auth2 = gapi.auth2.getAuthInstance();
-        auth2.signOut().then(function () {
-            console.log('User signed out.');
-        });
     };
 
 }());

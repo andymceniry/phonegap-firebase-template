@@ -27,16 +27,4 @@ var oApp = oApp || {};
 
     };
 
-
-    var $loginButton = $('#login a');
-    var $loginStatus = $('#login p');
-
-    $loginButton.on('click', function() {
-
-    });
-
 }());
-
-
-
-

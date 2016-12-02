@@ -13,7 +13,7 @@ var oApp = oApp || {};
 
         oApp.gapi.googleapi.authorize({
             client_id: '499750290208-hh5hd6dr5bpdmiii9f152qv2ofiph7f8.apps.googleusercontent.com',
-            //client_secret: '25gBMgoXkBYy97mcPVmV-JlP',
+            client_secret: '25gBMgoXkBYy97mcPVmV-JlP',
             redirect_uri: 'http://localhost',
             scope: 'profile email'
         }).done(function (data) {

@@ -179,8 +179,8 @@ var oApp = oApp || {};
                 var i,
                     items = data.val();
 
-            console.clear();
-            console.groupCollapsed('Messages');
+                console.clear();
+                console.groupCollapsed('Messages');
 
                 for (i in items) {
                     if (items.hasOwnProperty(i)) {
