@@ -88,7 +88,7 @@ var oApp = oApp || {};
         if (r == true) {
             navigator.app.exitApp();
         }
-        console.log('ignoring back button press');        
+        console.log('ignoring back button press');
     };
 
     oApp.pg.menubutton = function () {

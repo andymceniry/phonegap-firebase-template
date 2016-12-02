@@ -9,52 +9,19 @@ var oApp = oApp || {};
 
     oApp.storage.name = 'phonegap-firebase-template';
 
-    oApp.initApp = function (phonegapAvailable) {
-
-        oApp.phonegapAvailable = phonegapAvailable !== false;
-
-        //  if we are in phonegap then show on-screen logging else remove the div
-        if (oApp.phonegapAvailable === false) {
-            $('#log').remove();
-            $('#divPhonegapReg').html('Phonegap is not available :-(');
-            console.log('no phonegap');
-        } else {
-            oApp.initLogger();  //  we are in the app so override the console
-            $('#log').removeClass('hide');
-            $('#divPhonegapReg').html('Phonegap is now ready to use :-)');
-            console.log('phonegap loaded');
-        }
-
-        $('#divTests').removeClass('hide');
-        oApp.initPhonegap();
-        oApp.initFirebase();
-        oApp.init();
+    oApp.configs.fb = {
+        apiKey: 'AIzaSyCVpw804Nrmyn6N8idPnqVWtBK5b0wvBZ8',
+        authDomain: 'phonegap-firebase-template.firebaseapp.com',
+        databaseURL: 'https://phonegap-firebase-template.firebaseio.com',
+        storageBucket: 'gs://phonegap-firebase-template.appspot.com',
+        messagingSenderId: '534493340673'
     };
 
-    oApp.initPhonegap = function () {
-        document.addEventListener('backbutton', oApp.pg.backbutton, false);
+    oApp.configs.gapi = {
+        client_id: '499750290208-hh5hd6dr5bpdmiii9f152qv2ofiph7f8.apps.googleusercontent.com',
+        client_secret: '25gBMgoXkBYy97mcPVmV-JlP',
+        scope: 'profile email'
     };
-
-    oApp.initFirebase = function () {
-
-        var config = {
-            apiKey: "AIzaSyCVpw804Nrmyn6N8idPnqVWtBK5b0wvBZ8",
-            authDomain: "phonegap-firebase-template.firebaseapp.com",
-            databaseURL: "https://phonegap-firebase-template.firebaseio.com",
-            storageBucket: "gs://phonegap-firebase-template.appspot.com",
-            messagingSenderId: "534493340673"
-        };
-
-        console.groupCollapsed('Firebase setup');
-        console.log(config);
-        console.log('version: ' + firebase.SDK_VERSION);
-        console.groupEnd('Firebase setup');
-
-        firebase.initializeApp(config);
-        oApp.fb.auth.setUpListener();
-        oApp.fb.dbo = firebase.database();
-    };
-
 
     oApp.pg.runTest = function (test) {
 
@@ -204,17 +171,70 @@ var oApp = oApp || {};
 
     oApp.pgfb.runTest = function (test) {
 
-        var task = null;
-
         switch (test) {
 
         case 'authentication-signin-google':
-            task = oApp.pgfb.googleSignIn();
-            oApp.outputTestResults(task, true);
+            oApp.pgfb.googleSignIn();
             break;
 
         }
 
     };
+
+    oApp.runTest = function (test) {
+
+        switch (test) {
+
+        case 'browser-history':
+            console.log(history);
+            break;
+
+        case 'browser-location':
+            console.log(location);
+            break;
+
+        case 'browser-navigator':
+            console.log(navigator);
+            break;
+
+        case 'browser-screen':
+            console.log(screen);
+            break;
+
+        }
+
+    };
+
+    $('ul#divTests li span').click(function () {
+
+        var el = $(this),
+            type = el.data('type'),
+            item = el.data('item'),
+            groupName = type + ': ' + item.split('-').join(' ');
+
+        console.clear();
+        console.groupCollapsed(groupName);
+
+        switch (type) {
+
+        case 'pg':
+            oApp.pg.runTest(item);
+            break;
+
+        case 'fb':
+            oApp.fb.runTest(item);
+            break;
+
+        case 'pgfb':
+            oApp.pgfb.runTest(item);
+            break;
+
+        case 'misc':
+            oApp.runTest(item);
+            break;
+
+        }
+
+    });
 
 }());

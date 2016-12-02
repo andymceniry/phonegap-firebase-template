@@ -10,6 +10,16 @@ var oApp = oApp || {};
     oApp.init = function () {
         console.log('initialising app');
 
+        if (oApp.phonegapAvailable) {
+            $('#divPhonegapReg').html('Phonegap is now ready to use :-)');
+            console.log('phonegap loaded');
+        } else {
+            $('#divPhonegapReg').html('Phonegap is not available :-(');
+            console.log('no phonegap');
+        }
+
+        $('#divTests').removeClass('hide');
+
         oApp.ls = oApp.storage.get(oApp.storage.name) || oApp.getAndSetDefaultStorageObject();
         oApp.storage.set(oApp.storage.name, oApp.ls);
 

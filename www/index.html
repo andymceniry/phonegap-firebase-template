@@ -41,18 +41,17 @@
                     <span data-type="fb" data-item="authentication-signin-password">Sign in</span>
                     <span data-type="fb" data-item="authentication-signout">Sign out</span></li>
                 <li><b>Storage:</b><span data-type="fb" data-item="storage-string">Text</span>
-                    <span data-type="fb" data-item="storage-image">Image from PG gallery</span></li>
+                    <span data-type="fb" data-item="storage-image">Image</span></li>
 
-                <li><b>Database:</b><span data-type="fb" data-item="database-write">Write message</span><span data-type="fb" data-item="database-view">View messages</span></li>
+                <li><b>Database:</b><span data-type="fb" data-item="database-write">Write</span>
+                    <span data-type="fb" data-item="database-view">Read</span></li>
 
                 <li class="header">Hybrid Tests</li>
                 <li><b>Auth - Google:</b><span data-type="pgfb" data-item="authentication-signin-google">Sign in</span></li>
 
                 <li class="header">Miscellaneous</li>
-                <li><b>Browser:</b><span data-type="misc" data-item="browser-history">History</span>
-                    <span data-type="misc" data-item="browser-location">Location</span>
-                    <span data-type="misc" data-item="browser-navigator">Navigator</span>
-                    <span data-type="misc" data-item="browser-screen">Screen</span></li>
+                <li><b>Browser:</b><span data-type="misc" data-item="browser-location">Location</span>
+                    <span data-type="misc" data-item="browser-navigator">Navigator</span></li>
 
             </ul>
 
@@ -61,22 +60,23 @@
         </div>
 
         <pre id="log" class="hide"></pre>
+        <div id="logTrigger"></div>
 
         <script src="js/vendor/jquery-3.1.1.min.js"></script>
         <script src="https://apis.google.com/js/platform.js" async defer></script>
         <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
-        <script src="js/core.js"></script>
-        <script src="js/core-php.js"></script>
-        <script src="js/core-googleapi.js"></script>
-        <script src="js/core-phonegap.js"></script>
-        <script src="js/core-firebase.js"></script>
-        <script src="js/core-phonegap-firebase.js"></script>
+        <script src="js/core/core.js"></script>
+        <script src="js/core/core-php.js"></script>
+        <script src="js/core/core-googleapi.js"></script>
+        <script src="js/core/core-phonegap.js"></script>
+        <script src="js/core/core-firebase.js"></script>
+        <script src="js/core/core-phonegap-firebase.js"></script>
         <script src="js/setup.js"></script>
         <script src="js/app.js"></script>
         <script src="cordova.js"></script>
         <script>
             oApp.waitForPhonegapToLoad = (function () {
-                document.addEventListener('deviceready', oApp.initApp, false);
+                document.addEventListener('deviceready', oApp.initPGFB, false);
             }());
         </script>
 

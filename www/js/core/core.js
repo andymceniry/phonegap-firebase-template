@@ -1,4 +1,4 @@
-/*global $, gapi*/
+/*global $, firebase*/
 /*jslint eqeq:true plusplus:true*/
 
 var oApp = oApp || {};
@@ -7,9 +7,7 @@ var oApp = oApp || {};
 
 	'use strict';
 
-    $('#log').click(function () {
-        $(this).toggleClass('open');
-    });
+    oApp.configs = {};
 
     oApp.storage = {};
 
@@ -98,6 +96,53 @@ var oApp = oApp || {};
 
     };
 
+    $('#logTrigger').click(function () {
+        oApp.openLog();
+    });
+
+    $('#log').click(function () {
+        $('#log').animate({opacity: 0, height: 0}, 250);
+        $('#logTrigger').animate({opacity: 1}, 250);
+    });
+
+    oApp.openLog = function () {
+        $('#log').animate({opacity: 1, height: '100%'}, 250);
+        $('#logTrigger').animate({opacity: 0}, 250);
+    };
+
+    oApp.initPGFB = function (phonegapAvailable) {
+
+        oApp.phonegapAvailable = phonegapAvailable !== false;
+
+        //  if we are in phonegap then show on-screen logging else remove the div
+        if (oApp.phonegapAvailable === false) {
+            $('#log').remove();
+        } else {
+            oApp.initLogger();  //  we are in the app so override the console
+            $('#log').removeClass('hide');
+        }
+
+        oApp.initPhonegap();
+        oApp.initFirebase();
+        oApp.init();
+    };
+
+    oApp.initPhonegap = function () {
+        console.log('Phonegap setup');
+        document.addEventListener('backbutton', oApp.pg.backbutton, false);
+    };
+
+    oApp.initFirebase = function () {
+        console.groupCollapsed('Firebase setup');
+        console.log(oApp.configs.fb);
+        console.log('version: ' + firebase.SDK_VERSION);
+        console.groupEnd('Firebase setup');
+
+        firebase.initializeApp(oApp.configs.fb);
+        oApp.fb.auth.setUpListener();
+        oApp.fb.dbo = firebase.database();
+    };
+
     oApp.getDefaultTestObject = function () {
 
         var defaultObj = {};
@@ -129,41 +174,9 @@ var oApp = oApp || {};
             });
 
         if (autoShow) {
-            $('#log').addClass('open');
+            oApp.openLog();
         }
     };
-
-    $('ul#divTests li span').click(function () {
-
-        var el = $(this),
-            type = el.data('type'),
-            item = el.data('item'),
-            groupName = type + ': ' + item.split('-').join(' ');
-
-        console.clear();
-        console.groupCollapsed(groupName);
-
-        switch (type) {
-
-        case 'pg':
-            oApp.pg.runTest(item);
-            break;
-
-        case 'fb':
-            oApp.fb.runTest(item);
-            break;
-
-        case 'pgfb':
-            oApp.pgfb.runTest(item);
-            break;
-
-        case 'misc':
-            oApp.runTest(item);
-            break;
-
-        }
-
-    });
 
     $('body').on('click', '.jsClickToHide', function () {
         $(this).addClass('hide');
@@ -190,30 +203,6 @@ var oApp = oApp || {};
             'photoUrl': user.photoURL,
             'uid': user.uid
         };
-
-    };
-
-    oApp.runTest = function (test) {
-
-        switch (test) {
-
-        case 'browser-history':
-            console.log(history);
-            break;
-
-        case 'browser-location':
-            console.log(location);
-            break;
-
-        case 'browser-navigator':
-            console.log(navigator);
-            break;
-
-        case 'browser-screen':
-            console.log(screen);
-            break;
-
-        }
 
     };
 
