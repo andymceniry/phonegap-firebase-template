@@ -84,12 +84,15 @@ var oApp = oApp || {};
     };
 
     oApp.pg.backbutton = function () {
-        var r = confirm('Back button pressed; shall I ignore this?');
+        var r = confirm('Back button pressed; Are you sure you want to exit?');
         if (r == true) {
-            console.log('ignoring back button press');
-            return false;
+            navigator.app.exitApp();
         }
-        navigator.app.exitApp();
+        console.log('ignoring back button press');        
+    };
+
+    oApp.pg.menubutton = function () {
+        console.log('menu button pressed');
     };
 
 }());
