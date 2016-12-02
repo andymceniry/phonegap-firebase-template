@@ -185,6 +185,9 @@ var oApp = oApp || {};
 
     };
 
+
+
+
     oApp.isUserEqual = function (googleUser, firebaseUser) {
         if (firebaseUser) {
             var providerData = firebaseUser.providerData,
