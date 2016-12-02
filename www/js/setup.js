@@ -145,7 +145,7 @@ var oApp = oApp || {};
 
             break;
 
-        case 'database-view':
+        case 'database-read':
 
             callback = function (data) {
                 var i,
@@ -162,6 +162,7 @@ var oApp = oApp || {};
             };
 
             oApp.fb.db.viewList('messages/', callback);
+            oApp.openLog();
 
             break;
 
@@ -185,20 +186,14 @@ var oApp = oApp || {};
 
         switch (test) {
 
-        case 'browser-history':
-            console.log(history);
-            break;
-
         case 'browser-location':
             console.log(location);
+            oApp.openLog();
             break;
 
         case 'browser-navigator':
             console.log(navigator);
-            break;
-
-        case 'browser-screen':
-            console.log(screen);
+            oApp.openLog();
             break;
 
         }
