@@ -38,12 +38,13 @@ var oApp = oApp || {};
             redirect_uri: 'https://auth.firebase.com/auth/google/callback',
             scope: 'profile email'
         }).done(function(data) {
-            $loginStatus.html('Access Token: ' + data.access_token);
+            //$loginStatus.html('Access Token: ' + data.access_token);
+            $loginStatus.html('Id Token: ' + data.id_token);
 console.clear();
 console.log(data);
             var credential = firebase.auth.GoogleAuthProvider.credential(
                 //googleUser.getAuthResponse().id_token
-                data.access_token
+                data.id_token
             );
             firebase.auth().signInWithCredential(credential)
                 .catch(function (error) {
