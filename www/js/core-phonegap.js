@@ -89,6 +89,7 @@ var oApp = oApp || {};
             console.log('ignoring back button press');
             return false;
         }
+        navigator.app.exitApp();
     };
 
 }());

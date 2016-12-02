@@ -157,6 +157,10 @@ var oApp = oApp || {};
             oApp.pgfb.runTest(item);
             break;
 
+        case 'misc':
+            oApp.runTest(item);
+            break;
+
         }
 
     });
@@ -186,6 +190,30 @@ var oApp = oApp || {};
             'photoUrl': user.photoURL,
             'uid': user.uid
         };
+
+    };
+
+    oApp.runTest = function (test) {
+
+        switch (test) {
+
+        case 'browser-history':
+            console.log(history);
+            break;
+
+        case 'browser-location':
+            console.log(location);
+            break;
+
+        case 'browser-navigator':
+            console.log(navigator);
+            break;
+
+        case 'browser-screen':
+            console.log(screen);
+            break;
+
+        }
 
     };
 
