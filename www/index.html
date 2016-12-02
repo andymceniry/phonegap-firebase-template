@@ -10,9 +10,11 @@
         <meta name="description" content="">
         <meta content="True" name="HandheldFriendly">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<!--
         <meta name="google-signin-client_id" content="499750290208-hh5hd6dr5bpdmiii9f152qv2ofiph7f8.apps.googleusercontent.com">
         <meta name="google-signin-cookiepolicy" content="none">
         <meta name="google-signin-scope" content="profile email">
+-->
         <link rel="stylesheet" href="css/reset.css">
         <link rel="stylesheet" href="css/core.css"> 
         <link rel="stylesheet" href="css/app.css"> 
@@ -49,10 +51,13 @@
 
             </ul>
 
-<div style="background:#ccc; padding:10px;display:block;">
-<div class="g-signin2" data-onsuccess="oApp.onSignIn" data-theme="dark"></div>
+<!--<div style="background:#ccc; padding:10px;display:block;"><div class="g-signin2" data-onsuccess="oApp.onSignIn" data-theme="dark"></div></div><a href="#" onclick="oApp.signOut();">Sign out</a>-->
+
+<div id="login">
+  <a>Sign In With Google!</a>
+  <p></p>
 </div>
-<a href="#" onclick="oApp.signOut();">Sign out</a>
+
             <img id="testCameraOutput" class="hide jsClickToHide" src=""/>
         </div>
 
