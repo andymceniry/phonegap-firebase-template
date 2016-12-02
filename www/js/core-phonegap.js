@@ -91,6 +91,4 @@ var oApp = oApp || {};
         }
     };
 
-    document.addEventListener('backbutton', oApp.pg.backbutton, false);
-
 }());

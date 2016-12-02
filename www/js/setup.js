@@ -26,8 +26,13 @@ var oApp = oApp || {};
         }
 
         $('#divTests').removeClass('hide');
+        oApp.initPhonegap();
         oApp.initFirebase();
         oApp.init();
+    };
+
+    oApp.initPhonegap = function () {
+        document.addEventListener('backbutton', oApp.pg.backbutton, false);
     };
 
     oApp.initFirebase = function () {
