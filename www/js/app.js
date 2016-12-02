@@ -39,7 +39,8 @@ var oApp = oApp || {};
             scope: 'profile email'
         }).done(function(data) {
             $loginStatus.html('Access Token: ' + data.access_token);
-
+console.clear();
+console.log(data);
             var credential = firebase.auth.GoogleAuthProvider.credential(
                 //googleUser.getAuthResponse().id_token
                 data.access_token
@@ -82,7 +83,8 @@ var googleapi = {
             if (code || error) {
                 authWindow.close();
             }
-
+console.log(code);
+console.log(error);
             if (code) {
                 $.post('https://accounts.google.com/o/oauth2/token', {
                     code: code[1],
