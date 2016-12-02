@@ -83,4 +83,14 @@ var oApp = oApp || {};
         return obj.dfd.promise();
     };
 
+    oApp.pg.backbutton = function () {
+        var r = confirm('Back button pressed; shall I ignore this?');
+        if (r == true) {
+            console.log('ignoring back button press');
+            return false;
+        }
+    };
+
+    document.addEventListener('backbutton', oApp.pg.backbutton, false);
+
 }());
