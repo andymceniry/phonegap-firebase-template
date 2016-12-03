@@ -113,7 +113,7 @@ var oApp = oApp || {};
         var sheet= document.styleSheets[1],
             rules= 'cssRules' in sheet? sheet.cssRules : sheet.rules;
         rules[0].style.width = $(window).width() + 'px';
-        rules[1].style.right = ($(window).width() * -1) + 'px';
+        rules[1].style.left = ($(window).width() * -1) + 'px';
     };
 
     oApp.openLog = function () {
@@ -135,6 +135,10 @@ var oApp = oApp || {};
 
         $('#menu').removeClass('hide');
         oApp.setDeviceWidth();
+
+$(window).resize(function(){
+oApp.setDeviceWidth();
+});
 
         oApp.initPhonegap();
         oApp.initFirebase();
