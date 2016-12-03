@@ -109,6 +109,13 @@ var oApp = oApp || {};
 		$(this).add('#menu').toggleClass('open');
 	});
 
+    oApp.setDeviceWidth = function () {
+        var sheet= document.styleSheets[1];console.log(sheet),
+            rules= 'cssRules' in sheet? sheet.cssRules : sheet.rules;
+        rules[0].style.width = $(window).width() + 'px';
+        rules[1].style.right = ($(window).width() * -1) + 'px';
+    };
+
     oApp.openLog = function () {
         $('#log').animate({opacity: 1, height: '100%'}, 250);
         $('#logTrigger').animate({opacity: 0}, 250);
@@ -125,6 +132,8 @@ var oApp = oApp || {};
             oApp.initLogger();  //  we are in the app so override the console
             $('#log').add('#logTrigger').removeClass('hide');
         }
+
+        $('#menu').removeClass('hide');
 
         oApp.initPhonegap();
         oApp.initFirebase();
