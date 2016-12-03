@@ -110,7 +110,7 @@ var oApp = oApp || {};
 	});
 
     oApp.setDeviceWidth = function () {
-        var sheet= document.styleSheets[1];console.log(sheet),
+        var sheet= document.styleSheets[1],
             rules= 'cssRules' in sheet? sheet.cssRules : sheet.rules;
         rules[0].style.width = $(window).width() + 'px';
         rules[1].style.right = ($(window).width() * -1) + 'px';
@@ -134,6 +134,7 @@ var oApp = oApp || {};
         }
 
         $('#menu').removeClass('hide');
+        oApp.setDeviceWidth();
 
         oApp.initPhonegap();
         oApp.initFirebase();
