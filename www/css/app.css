@@ -2,5 +2,5 @@
 
 #divTests li { font-size:13px; display: inline-block; }
 #divTests li.header { color:#900; width:100%; }
-#divTests li b { display: inline-block; min-width:100px; }
-#divTests li span { display: inline-block; background: #eee; padding: 0 5px; min-width:65px; border-radius: 3px; line-height: 20px; height: 20px; cursor: pointer; }
+#divTests li b { display: inline-block; min-width:120px; }
+#divTests li span { display: inline-block; background: #eee; padding: 0 5px; min-width:70px; border-radius: 3px; line-height: 20px; height: 20px; cursor: pointer; }
