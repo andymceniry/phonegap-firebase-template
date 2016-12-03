@@ -105,6 +105,10 @@ var oApp = oApp || {};
         $('#logTrigger').animate({opacity: 1}, 250);
     });
 
+	$('#burger').click(function(){
+		$(this).add('#menu').toggleClass('open');
+	});
+
     oApp.openLog = function () {
         $('#log').animate({opacity: 1, height: '100%'}, 250);
         $('#logTrigger').animate({opacity: 0}, 250);
