@@ -126,7 +126,7 @@ var oApp = oApp || {};
         oApp.phonegapAvailable = phonegapAvailable !== false;
 
         //  if we are in phonegap then show on-screen logging else remove the div
-        if (oApp.phonegapAvailable !== false) {
+        if (oApp.phonegapAvailable === false) {
             $('#log').add('#logTrigger').remove();
         } else {
             oApp.initLogger();  //  we are in the app so override the console
