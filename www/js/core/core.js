@@ -105,13 +105,13 @@ var oApp = oApp || {};
         $('#logTrigger').animate({opacity: 1}, 250);
     });
 
-	$('#burger').click(function(){
+	$('#burger').click(function () {
 		$(this).add('#menu').toggleClass('open');
 	});
 
     oApp.setDeviceWidth = function () {
-        var sheet= document.styleSheets[1],
-            rules= 'cssRules' in sheet? sheet.cssRules : sheet.rules;
+        var sheet = document.styleSheets[1],
+            rules = sheet.hasOwnProperty('cssRules') ? sheet.cssRules : sheet.rules;
         rules[0].style.width = $(window).width() + 'px';
         rules[1].style.left = ($(window).width() * -1) + 'px';
     };
@@ -134,15 +134,16 @@ var oApp = oApp || {};
         }
 
         $('#menu').removeClass('hide');
-        oApp.setDeviceWidth();
 
-$(window).resize(function(){
-oApp.setDeviceWidth();
-});
+        $(window).resize(function () {
+            oApp.setDeviceWidth();
+        });
+        oApp.setDeviceWidth();
 
         oApp.initPhonegap();
         oApp.initFirebase();
         oApp.init();
+
     };
 
     oApp.initPhonegap = function () {

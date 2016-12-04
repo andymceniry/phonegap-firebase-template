@@ -1,4 +1,4 @@
-#testCameraOutput { width: 320px; min-height: 240px; position: absolute; top: 60px; left: 50%; margin-left: -160px; background: #fff; padding: 5px; border: 2px solid #333; }
+#testCameraOutput { width:320px; min-height:240px; position:absolute; top: 60px; left: 50%; margin-left: -160px; background: #fff; padding: 5px; border: 2px solid #333; }
 
 #divTests ul { padding:1px; }
 #divTests li { font-size:13px; display: inline-block; height: 24px;line-height: 24px; }
