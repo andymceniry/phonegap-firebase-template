@@ -15,7 +15,7 @@ header h1 { color:#fff; display:inline; line-height: 48px; margin-left: 0px; fon
 
 
 
-#log { position: absolute; background: rgba(0,0,0,0.95); width: 100%; height: 0%; opacity:0; line-height: 20px; bottom: 0; left: 0; padding: 10px; font-size: 12px; overflow-y: auto; color: #ccc; margin-bottom:-48px; }
+#log { position: absolute; background: rgba(0,0,0,0.95); width: 100%; height: 0%; opacity:0; line-height: 20px; bottom: 0; left: 0; padding: 10px 10px 48px; font-size: 12px; overflow-y: auto; color: #ccc; margin-bottom:-48px; }
 #log.open { height: 100%; }
 #log .groupName { font-weight:bold; color:#ff0; }
 #logTrigger { position:absolute; bottom: 2px; right: 2px; width: 32px; height: 25px; background:url(../img/core/console.png); }
