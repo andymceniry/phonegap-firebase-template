@@ -22,6 +22,11 @@ header h1 { color:#fff; display:inline; line-height: 48px; margin-left: 0px; fon
 #log.open { height: 100%; }
 #log span.key { color:#0c0; }
 #log span.value { color:#ccc; }
+#log span.number { color:#f0f; }
+#log span.string { color:#ccc; }
+#log span.boolean { color: blue; }
+#log span.null { color: magenta; }
+
 #log .groupName { font-weight:bold; color:#ff0; }
 #logTrigger { position:absolute; bottom: 2px; right: 2px; width: 32px; height: 25px; background:url(../img/core/console.png); }
 

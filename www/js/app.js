@@ -15,7 +15,6 @@ var oApp = oApp || {};
             console.log('phonegap loaded');
         } else {
             $('#divPhonegapReg').html('Phonegap is not available :-(');
-            console.log('no phonegap');
         }
 
         oApp.waitForSplashEndThenShowStartPage();

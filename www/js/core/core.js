@@ -66,16 +66,21 @@ var oApp = oApp || {};
                 item = arguments[i];
 
                 switch (typeof item) {
+                case 'number':
                 case 'string':
-                    $('#log').append(item);
+                    $('#log').append('<span class="' + typeof item + '">' + item + '</span>');
                     break;
                 case 'object':
+                    $('#log').append(oApp.syntaxHighlight(JSON.stringify(item, null, 2)));
+                    break;
+                case 'objectx':
                     json = JSON.stringify(item);
                     json = json.substr(1, json.length - 2);
                     json = json.split(',"').join('<br/>"');
-                    //json = json.split('":').join('": ');
                     json = json.replace(/"([a-zA-Z0-9]+)":/gm, "<span class='key'>$1</span>:");
                     json = json.replace(/:"([^"]+)"/gm, ": <span class='value'>$1</span>");
+                    json = json.replace(/{/gm, " {<br>");
+                    json = json.replace(/}/gm, "<br>}");
                     $('#log').append(json);
                     break;
                 default:
@@ -165,7 +170,7 @@ var oApp = oApp || {};
         oApp.splashStart = (new Date()).getTime();
 
         //  if we are in phonegap then show on-screen logging else remove the div
-        if (oApp.phonegapAvailable === false) {
+        if (oApp.phonegapAvailable !== false) {
             $('#log').add('#logTrigger').remove();
         } else {
             oApp.initLogger();  //  we are in the app so override the console
@@ -179,7 +184,13 @@ var oApp = oApp || {};
         });
         oApp.setDeviceWidth();
 
-        oApp.initPhonegap();
+        if (oApp.phonegapAvailable !== false) {
+            oApp.initPhonegap();
+        } else {
+            console.groupCollapsed('Phonegap setup...');
+            console.log('phonegap not available');
+            console.groupEnd('Phonegap setup...');
+        }
         oApp.initFirebase();
         oApp.initStorage();
         oApp.init();
@@ -278,7 +289,7 @@ var oApp = oApp || {};
             console.log(oApp.getEssentialUserData(user));
             console.groupEnd('User');
         } else {
-            console.log('User: Nobody is signed in');
+            console.log('User: {}');
         }
 
     };
@@ -292,6 +303,28 @@ var oApp = oApp || {};
             'uid': user.uid
         };
 
+    };
+
+    oApp.syntaxHighlight = function (json) {
+        if (typeof json != 'string') {
+            json = JSON.stringify(json, undefined, 2);
+        }
+        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+            var cls = 'number';
+            if (/^"/.test(match)) {
+                if (/:$/.test(match)) {
+                    cls = 'key';
+                } else {
+                    cls = 'string';
+                }
+            } else if (/true|false/.test(match)) {
+                cls = 'boolean';
+            } else if (/null/.test(match)) {
+                cls = 'null';
+            }
+            return '<span class="' + cls + '">' + match + '</span>';
+        });
     };
 
 }());
