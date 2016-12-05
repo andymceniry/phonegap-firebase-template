@@ -225,5 +225,7 @@ var oApp = oApp || {};
 
     };
 
+    $('#splash').animate({opacity: 1}, oApp.configs.app.splashFadeSpeed);
+
 }());
 
