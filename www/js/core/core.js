@@ -73,7 +73,9 @@ var oApp = oApp || {};
                     json = JSON.stringify(item);
                     json = json.substr(1, json.length - 2);
                     json = json.split(',"').join('<br/>"');
-                    json = json.split('":').join('" : ');
+                    //json = json.split('":').join('": ');
+                    json = json.replace(/"([a-zA-Z0-9]+)":/gm, "<span class='key'>$1</span>:");
+                    json = json.replace(/:"([^"]+)"/gm, ": <span class='value'>$1</span>");
                     $('#log').append(json);
                     break;
                 default:
@@ -211,8 +213,8 @@ var oApp = oApp || {};
 
     oApp.initFirebase = function () {
         console.groupCollapsed('Firebase setup...');
+        oApp.configs.fb.version = firebase.SDK_VERSION;
         console.log(oApp.configs.fb);
-        console.log('version: ' + firebase.SDK_VERSION);
         console.groupEnd('Firebase setup...');
 
         firebase.initializeApp(oApp.configs.fb);
