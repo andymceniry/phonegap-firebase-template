@@ -9,6 +9,10 @@ var oApp = oApp || {};
 
     oApp.storage.name = 'phonegap-firebase-template';
 
+    oApp.configs.app = {
+        splashFadeSpeed: 500
+    };
+
     oApp.configs.fb = {
         apiKey: 'AIzaSyCVpw804Nrmyn6N8idPnqVWtBK5b0wvBZ8',
         authDomain: 'phonegap-firebase-template.firebaseapp.com',
