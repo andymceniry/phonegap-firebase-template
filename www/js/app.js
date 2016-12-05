@@ -18,10 +18,7 @@ var oApp = oApp || {};
             console.log('no phonegap');
         }
 
-        $('#divTests').removeClass('hide');
-
-        oApp.ls = oApp.storage.get(oApp.storage.name) || oApp.getAndSetDefaultStorageObject();
-        oApp.storage.set(oApp.storage.name, oApp.ls);
+        oApp.waitForSplashEndThenShowStartPage();
 
     };
 

@@ -10,7 +10,9 @@ var oApp = oApp || {};
     oApp.storage.name = 'phonegap-firebase-template';
 
     oApp.configs.app = {
-        splashFadeSpeed: 500
+        startPage: 'home',
+        splashFadeSpeed: 500,
+        splashShowLength: 2000
     };
 
     oApp.configs.fb = {

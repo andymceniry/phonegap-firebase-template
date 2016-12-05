@@ -121,9 +121,46 @@ var oApp = oApp || {};
         $('#logTrigger').animate({opacity: 0}, 250);
     };
 
+    oApp.showPage = function (id) {
+
+        var currentPageId = $('.jsActivePage').attr('id'),
+            page = $('#' + id),
+            header = page.data('header');
+
+        if (currentPageId === id) {
+            console.warn('page already showing', id);
+            return false;
+        }
+
+        $('#' + currentPageId)
+            .add('header')
+            .add('#burger')
+            .animate({opacity: 0}, oApp.configs.app.splashFadeSpeed);
+
+        setTimeout(
+            function () {
+                $('#' + currentPageId).removeClass('jsActivePage');
+                $('.page').addClass('hide');
+
+                page.css('opacity', 0).removeClass('hide').addClass('jsActivePage').animate({opacity: 1}, oApp.configs.app.splashFadeSpeed);
+                $('#burger').css('opacity', 0).removeClass('hide').animate({opacity: 1}, oApp.configs.app.splashFadeSpeed);
+                if (header !== undefined) {
+                    $('header').css('opacity', 0).find('h1').html(header);
+                    $('header').removeClass('hide').animate({opacity: 1}, oApp.configs.app.splashFadeSpeed);
+                }
+
+            },
+            oApp.configs.app.splashFadeSpeed
+        );
+
+    };
+
     oApp.initPGFB = function (phonegapAvailable) {
 
         oApp.phonegapAvailable = phonegapAvailable !== false;
+
+        oApp.showPage('splash');
+        oApp.splashStart = (new Date()).getTime();
 
         //  if we are in phonegap then show on-screen logging else remove the div
         if (oApp.phonegapAvailable === false) {
@@ -142,24 +179,54 @@ var oApp = oApp || {};
 
         oApp.initPhonegap();
         oApp.initFirebase();
+        oApp.initStorage();
         oApp.init();
 
     };
 
+    oApp.init = function () {
+        console.log('initialising app');
+        oApp.waitForSplashEndThenShowStartPage();
+    };
+
+    oApp.waitForSplashEndThenShowStartPage = function () {
+
+        var timeToWait = oApp.configs.app.splashShowLength + (oApp.configs.app.splashFadeSpeed * 2) - ((new Date()).getTime() - oApp.splashStart);
+
+        setTimeout(
+            function () {
+                oApp.showPage(oApp.configs.app.startPage);
+            },
+            timeToWait
+        );
+
+    };
+
     oApp.initPhonegap = function () {
-        console.log('Phonegap setup');
+        console.groupCollapsed('Phonegap setup...');
         document.addEventListener('backbutton', oApp.pg.backbutton, false);
+        console.log('added backbutton event handler');
+        console.groupEnd('Phonegap setup...');
     };
 
     oApp.initFirebase = function () {
-        console.groupCollapsed('Firebase setup');
+        console.groupCollapsed('Firebase setup...');
         console.log(oApp.configs.fb);
         console.log('version: ' + firebase.SDK_VERSION);
-        console.groupEnd('Firebase setup');
+        console.groupEnd('Firebase setup...');
 
         firebase.initializeApp(oApp.configs.fb);
         oApp.fb.auth.setUpListener();
         oApp.fb.dbo = firebase.database();
+    };
+
+    oApp.initStorage = function () {
+        console.groupCollapsed('Storage setup...');
+        oApp.ls = oApp.storage.get(oApp.storage.name) || oApp.getAndSetDefaultStorageObject();
+        oApp.storage.set(oApp.storage.name, oApp.ls);
+        console.log(oApp.storage.name);
+        console.log(oApp.ls);
+        console.groupEnd('Storage setup...');
     };
 
     oApp.getDefaultTestObject = function () {
@@ -224,8 +291,6 @@ var oApp = oApp || {};
         };
 
     };
-
-    $('#splash').animate({opacity: 1}, oApp.configs.app.splashFadeSpeed);
 
 }());
 
