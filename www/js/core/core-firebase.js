@@ -129,6 +129,12 @@ var oApp = oApp || {};
 
     };
 
+    oApp.fb.auth.user = function () {
+
+        return firebase.auth().currentUser;
+
+    };
+
     oApp.fb.db.addToList = function (path, data) {
 
         var dbRef = oApp.fb.dbo.ref(path),

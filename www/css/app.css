@@ -1,7 +1,7 @@
 #testCameraOutput { width:320px; min-height:240px; position:absolute; top: 60px; left: 50%; margin-left: -160px; background: #fff; padding: 5px; border: 2px solid #333; }
 
 #divTests ul { padding:1px; }
-#divTests li { font-size:13px; display: inline-block; height: 24px;line-height: 24px; }
+#divTests li { font-size:13px; display: block; line-height: 24px; }
 #divTests li.header { color:#900; width:100%; font-weight:bold;height: 30px;line-height: 30px; }
 #divTests li b { display: inline-block; min-width:110px; }
 #divTests li span { display: inline-block; background: #eee; padding: 0 5px; min-width:70px; border-radius: 3px; line-height: 20px; height: 20px; cursor: pointer; }
