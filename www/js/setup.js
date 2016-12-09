@@ -111,6 +111,7 @@ var oApp = oApp || {};
             }
 
             task = oApp.fb.auth.signout();
+            oApp.showPage('signin');
             oApp.outputTestResults(task);
             break;
 

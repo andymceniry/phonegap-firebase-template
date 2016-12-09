@@ -208,7 +208,11 @@ var oApp = oApp || {};
 
         setTimeout(
             function () {
-                oApp.showPage(oApp.configs.app.startPage);
+                if (oApp.fb.auth.user() === null) {
+                    oApp.showPage('signin');
+                } else {
+                    oApp.showPage(oApp.configs.app.startPage);
+                }
             },
             timeToWait
         );
@@ -326,6 +330,24 @@ var oApp = oApp || {};
             return '<span class="' + cls + '">' + match + '</span>';
         });
     };
+
+    $('#signin .signin-email').click(function () {
+        var email = $('#signinemail').val(),
+            password = $('#signinemail').val();
+
+        oApp.fb.auth.signin.password(email, password)
+            .done(function (r) {
+                console.log(r);
+                oApp.showPage(oApp.configs.app.startPage);
+            });
+
+        return false;
+
+    });
+
+    $('#signin .signin-google').click(function () {
+        oApp.pgfb.googleSignIn();
+    });
 
 }());
 
