@@ -32,6 +32,9 @@ var oApp = oApp || {};
                 data.id_token
             );
             firebase.auth().signInWithCredential(credential)
+                .done(function () {
+                    oApp.showPage(oApp.configs.app.startPage);
+                })
                 .catch(function (error) {
                     console.log(error);
                 });
