@@ -45,6 +45,11 @@ var oApp = oApp || {};
             oApp.outputTestResults(task, true);
             break;
 
+        case 'device':
+            task = oApp.pg.device.getDetails();
+            oApp.outputTestResults(task, true);
+            break;
+
         case 'geolocation-short':
             task = oApp.pg.geolocation.getCurrentPosition(false);
             oApp.outputTestResults(task, true);

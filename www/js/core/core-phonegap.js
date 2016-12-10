@@ -10,6 +10,7 @@ var oApp = oApp || {};
     oApp.pg = oApp.pg || {
         camera: {},
         connection: {},
+        device: {},
         geolocation: {}
     };
 
@@ -93,6 +94,20 @@ var oApp = oApp || {};
 
     oApp.pg.menubutton = function () {
         console.log('menu button pressed');
+    };
+
+    oApp.pg.device.getDetails = function () {
+
+        var obj = oApp.getDefaultDeferredObject();
+
+        if (window.device === undefined) {
+            obj.dfd.reject('window.device === undefined');
+        } else {
+            obj.dfd.resolve(window.device);
+        }
+
+        return obj.dfd.promise();
+
     };
 
 }());
