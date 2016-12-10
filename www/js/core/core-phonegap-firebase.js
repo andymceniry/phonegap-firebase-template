@@ -44,9 +44,6 @@ console.log('googleAuth > done');
                 }).then(function (value) {
                     console.log('firebaseSignIn > then');
                     obj.dfd.resolve(value);
-                }).done(function (value) {
-                    console.log('firebaseSignIn > done');
-                    obj.dfd.resolve(value);
                 });
         });
 
