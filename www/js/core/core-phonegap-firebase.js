@@ -36,8 +36,7 @@ var oApp = oApp || {};
 
             var credential = firebase.auth.GoogleAuthProvider.credential(data.id_token);
 
-            firebaseSignIn = firebase.auth().signInWithCredential(credential)
-                .resolve(function (value) {
+            firebaseSignIn = firebase.auth().signInWithCredential(credential).resolve(function (value) {
                     console.log('firebaseSignIn > resolve');
                     obj.dfd.resolve(value);
                 }).catch(function (error) {
