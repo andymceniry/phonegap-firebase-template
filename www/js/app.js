@@ -239,9 +239,8 @@ var oApp = oApp || {};
     oApp.handleConfirmSignOut = function (button) {
         switch (button) {
         case 1:
-            var task = oApp.fb.auth.signout();
+            oApp.fb.auth.signout();
             oApp.showPage('signin');
-            oApp.outputTestResults(task);
             break;
         }
     };

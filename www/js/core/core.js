@@ -289,11 +289,12 @@ var oApp = oApp || {};
         console.groupEnd();
 
         if (user) {
-            console.groupCollapsed('User: ' + user.email);
-            console.log(oApp.getEssentialUserData(user));
+            console.groupCollapsed('User');
+            //console.log(oApp.getEssentialUserData(user));
+            console.log(user);
             console.groupEnd('User');
         } else {
-            console.log('User: {}');
+            console.log('No user signed in');
         }
 
     };

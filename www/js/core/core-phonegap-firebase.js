@@ -33,16 +33,23 @@ var oApp = oApp || {};
         });
 
         googleAuth.done(function (data) {
-
+            console.log('PGFB: googleAuth > done', data);
             var credential = firebase.auth.GoogleAuthProvider.credential(data.id_token);
-
+            console.log('PGFB: googleAuth > done > credential', credential);
             firebaseSignIn = firebase.auth().signInWithCredential(credential);
 
             firebaseSignIn.done(function (success) {
+                console.log('PGFB: googleAuth > done > firebaseSignIn > done', success);
                 obj.dfd.resolve(success);
             });
 
             firebaseSignIn.catch(function (error) {
+                console.log('PGFB: googleAuth > done > firebaseSignIn > catch', error);
+                obj.dfd.reject(error);
+            });
+
+            firebaseSignIn.fail(function (error) {
+                console.log('PGFB: googleAuth > done > firebaseSignIn > fail', error);
                 obj.dfd.reject(error);
             });
         });
