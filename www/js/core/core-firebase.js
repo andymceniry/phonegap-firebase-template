@@ -113,6 +113,10 @@ var oApp = oApp || {};
 
     };
 
+    oApp.fb.auth.handleSigninPasswordFail = function (error) {
+        oApp.alert(error.message, null, error.code);
+    }
+
     oApp.fb.auth.signout = function () {
 
         var obj = oApp.getDefaultDeferredObject();

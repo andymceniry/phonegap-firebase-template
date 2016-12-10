@@ -318,13 +318,27 @@ var oApp = oApp || {};
 
     $('#signin .signin-email').click(function () {
         var email = $('#signinemail').val(),
-            password = $('#signinemail').val();
+            password = $('#signinpassword').val();
 
-        oApp.fb.auth.signin.password(email, password)
-            .done(function (r) {
-                console.log(r);
-                oApp.showPage(oApp.configs.app.startPage);
-            });
+        if (email === '') {
+            $('#signinemail').focus();
+            return false;
+        }
+
+        if (password === '') {
+            $('#signinpassword').focus();
+            return false;
+        }
+
+        var signIn = oApp.fb.auth.signin.password(email, password);
+
+        signIn.done(function (r) {
+            oApp.showPage(oApp.configs.app.startPage);
+        });
+
+        signIn.fail(function (error) {
+            oApp.fb.auth.handleSigninPasswordFail(error);
+        });
 
         return false;
 
@@ -334,7 +348,6 @@ var oApp = oApp || {};
         var signIn = oApp.pgfb.googleSignIn();
 
         signIn.done(function (success) {
-            console.log(success);
             oApp.showPage(oApp.configs.app.startPage);
         });
 
@@ -353,6 +366,21 @@ var oApp = oApp || {};
                 confirmCallback(2);
             } else {
                 confirmCallback(1);
+            }
+        }
+    };
+
+    oApp.alert = function (message, alertCallback, title, buttonName) {
+        if (oApp.phonegapAvailable) {
+            navigator.notification.alert(message, alertCallback, title, buttonName);
+        } else {
+            if (title !== undefined) {
+                alert(title + '\n\n' + message);
+            } else {
+                alert(message);
+            }
+            if (alertCallback !== undefined && alertCallback !== null) {
+                alertCallback();
             }
         }
     };
