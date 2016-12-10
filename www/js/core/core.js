@@ -129,7 +129,7 @@ var oApp = oApp || {};
     };
 
     oApp.showPage = function (id) {
-        console.log('showing page #' + id);
+
         var currentPageId = $('.jsActivePage').attr('id'),
             page = $('#' + id),
             header = page.data('header');
@@ -221,8 +221,10 @@ var oApp = oApp || {};
 
     oApp.initPhonegap = function () {
         console.groupCollapsed('Phonegap setup...');
+
         document.addEventListener('backbutton', oApp.pg.backbutton, false);
         console.log('added backbutton event handler');
+
         console.groupEnd('Phonegap setup...');
     };
 
@@ -264,23 +266,6 @@ var oApp = oApp || {};
 
     };
 
-    oApp.outputTestResults = function (test, autoShow) {
-
-        autoShow = autoShow === true;
-
-        test
-            .done(function (success) {
-                console.log(success);
-            })
-            .fail(function (error) {
-                console.log(error);
-            });
-
-        if (autoShow) {
-            oApp.openLog();
-        }
-    };
-
     $('body').on('click', '.jsClickToHide', function () {
         $(this).addClass('hide');
     });
@@ -290,8 +275,7 @@ var oApp = oApp || {};
 
         if (user) {
             console.groupCollapsed('User');
-            //console.log(oApp.getEssentialUserData(user));
-            console.log(user);
+            console.log(oApp.getEssentialUserData(user));
             console.groupEnd('User');
         } else {
             console.log('No user signed in');

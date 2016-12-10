@@ -236,6 +236,23 @@ var oApp = oApp || {};
 
     });
 
+    oApp.outputTestResults = function (test, autoShow) {
+
+        autoShow = autoShow === true;
+
+        test
+            .done(function (success) {
+                console.log(success);
+            })
+            .fail(function (error) {
+                console.log(error);
+            });
+
+        if (autoShow) {
+            oApp.openLog();
+        }
+    };
+
     oApp.handleConfirmSignOut = function (button) {
         switch (button) {
         case 1:
