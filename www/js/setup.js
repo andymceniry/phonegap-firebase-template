@@ -105,6 +105,10 @@ var oApp = oApp || {};
             break;
 
         case 'authentication-signout':
+
+            oApp.confirm('Sign out - Are you sure?', oApp.handleConfirmSignOut);
+            return false;
+
             response = confirm('Sign out - Are you sure?');
             if (response !== true) {
                 return false;

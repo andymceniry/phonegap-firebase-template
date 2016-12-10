@@ -349,5 +349,18 @@ var oApp = oApp || {};
         oApp.pgfb.googleSignIn();
     });
 
+    oApp.confirm = function (message, confirmCallback, title, buttonLabels) {
+        if (oApp.phonegapAvailable) {
+            navigator.notification.confirm(message, confirmCallback, title, buttonLabels);
+        } else {
+            var response = confirm(message);
+            if (response !== true) {
+                confirmCallback(2);
+            } else {
+                confirmCallback(1);
+            }
+        }
+    }
+    
 }());
 
