@@ -83,7 +83,7 @@ var oApp = oApp || {};
 
     oApp.fb.auth.register.password = function (email, password) {
 
-        var obj = oApp.getDefaultTestObject();
+        var obj = oApp.getDefaultDeferredObject();
 
         firebase.auth().createUserWithEmailAndPassword(email, password)
             .then(function (success) {
@@ -99,7 +99,7 @@ var oApp = oApp || {};
 
     oApp.fb.auth.signin.password = function (email, password) {
 
-        var obj = oApp.getDefaultTestObject();
+        var obj = oApp.getDefaultDeferredObject();
 
         firebase.auth().signInWithEmailAndPassword(email, password)
             .then(function (success) {
@@ -115,7 +115,7 @@ var oApp = oApp || {};
 
     oApp.fb.auth.signout = function () {
 
-        var obj = oApp.getDefaultTestObject();
+        var obj = oApp.getDefaultDeferredObject();
 
         firebase.auth().signOut()
             .then(function (success) {

@@ -246,7 +246,7 @@ var oApp = oApp || {};
         console.groupEnd('Storage setup...');
     };
 
-    oApp.getDefaultTestObject = function () {
+    oApp.getDefaultDeferredObject = function () {
 
         var defaultObj = {};
 
@@ -346,7 +346,17 @@ var oApp = oApp || {};
     });
 
     $('#signin .signin-google').click(function () {
-        oApp.pgfb.googleSignIn();
+        var signIn = oApp.pgfb.googleSignIn();
+
+        signIn.done(function (success) {
+            console.log(success);
+            oApp.showPage(oApp.configs.app.startPage);
+        });
+
+        signIn.fail(function (error) {
+            console.log(error);
+        });
+
     });
 
     oApp.confirm = function (message, confirmCallback, title, buttonLabels) {
@@ -360,7 +370,7 @@ var oApp = oApp || {};
                 confirmCallback(1);
             }
         }
-    }
-    
+    };
+
 }());
 

@@ -15,7 +15,7 @@ var oApp = oApp || {};
 
     oApp.pg.geolocation.getCurrentPosition = function (allData, decimalPlaces) {
 
-        var obj = oApp.getDefaultTestObject();
+        var obj = oApp.getDefaultDeferredObject();
 
         obj.allData = allData !== false;
         obj.decimalPlaces = decimalPlaces || 4;
@@ -35,7 +35,7 @@ var oApp = oApp || {};
 
     oApp.pg.connection.getDetails = function () {
 
-        var obj = oApp.getDefaultTestObject(),
+        var obj = oApp.getDefaultDeferredObject(),
             networkState,
             states;
 
@@ -66,7 +66,7 @@ var oApp = oApp || {};
 
         camera = camera !== false;
 
-        var obj = oApp.getDefaultTestObject();
+        var obj = oApp.getDefaultDeferredObject();
 
         if (navigator.camera === undefined) {
             obj.dfd.reject('navigator.camera === undefined');

@@ -11,36 +11,50 @@ var oApp = oApp || {};
 
     oApp.pgfb.googleSignIn = function () {
 
+        var obj = oApp.getDefaultDeferredObject(),
+            googleAuth,
+            firebaseSignIn;
+
         if (oApp.configs.gapi.client_id === undefined) {
-            console.log('No Google Client Id supplied');
+            obj.dfd.reject('No Google Client Id supplied');
             return false;
         }
 
         if (oApp.configs.gapi.client_secret === undefined) {
-            console.log('No Google Client Secret supplied');
+            obj.dfd.reject('No Google Client Secret supplied');
             return false;
         }
 
-        oApp.gapi.googleapi.authorize({
+        googleAuth = oApp.gapi.googleapi.authorize({
             client_id: oApp.configs.gapi.client_id,
             client_secret: oApp.configs.gapi.client_secret,
             redirect_uri: oApp.configs.gapi.redirect_uri || 'http://localhost',
             scope: oApp.configs.gapi.scope || 'profile email'
-        }).done(function (data) {
-            console.log('Id Token: ' + data.id_token);
-            var credential = firebase.auth.GoogleAuthProvider.credential(
-                data.id_token
-            );
-            firebase.auth().signInWithCredential(credential)
-                .done(function () {
-                    oApp.showPage(oApp.configs.app.startPage);
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-        }).fail(function (data) {
-            console.log(data.error);
         });
+
+        googleAuth.done(function (data) {
+
+            console.log('Id Token: ' + data.id_token);
+
+            var credential = firebase.auth.GoogleAuthProvider.credential(data.id_token);
+
+            firebaseSignIn = firebase.auth().signInWithCredential(credential);
+
+            firebaseSignIn.done(function (success) {
+                obj.dfd.resolve(success);
+            });
+
+            firebaseSignIn.catch(function (error) {
+                obj.dfd.reject(error);
+            });
+        });
+
+        googleAuth.fail(function (data) {
+            obj.dfd.reject(data.error);
+        });
+
+        return obj.dfd.promise();
+
     };
 
 }());
