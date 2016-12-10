@@ -40,6 +40,11 @@ var oApp = oApp || {};
 
             console.log('PGFB: googleAuth > done > firebaseSignIn', firebaseSignIn);
 
+            firebaseSignIn.resolve(function (value) {
+                console.log('PGFB: googleAuth > done > firebaseSignIn > resolve', value);
+                obj.dfd.resolve(value);
+            });
+
             firebaseSignIn.done(function (success) {
                 console.log('PGFB: googleAuth > done > firebaseSignIn > done', success);
                 obj.dfd.resolve(success);
