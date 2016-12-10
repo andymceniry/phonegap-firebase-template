@@ -38,6 +38,8 @@ var oApp = oApp || {};
             console.log('PGFB: googleAuth > done > credential', credential);
             firebaseSignIn = firebase.auth().signInWithCredential(credential);
 
+            console.log('PGFB: googleAuth > done > firebaseSignIn', firebaseSignIn);
+
             firebaseSignIn.done(function (success) {
                 console.log('PGFB: googleAuth > done > firebaseSignIn > done', success);
                 obj.dfd.resolve(success);
