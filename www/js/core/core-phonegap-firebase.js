@@ -34,8 +34,6 @@ var oApp = oApp || {};
 
         googleAuth.done(function (data) {
 
-            console.log('Id Token: ' + data.id_token);
-
             var credential = firebase.auth.GoogleAuthProvider.credential(data.id_token);
 
             firebaseSignIn = firebase.auth().signInWithCredential(credential);

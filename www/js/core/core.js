@@ -129,7 +129,7 @@ var oApp = oApp || {};
     };
 
     oApp.showPage = function (id) {
-
+        console.log('showing page #' + id);
         var currentPageId = $('.jsActivePage').attr('id'),
             page = $('#' + id),
             header = page.data('header');
