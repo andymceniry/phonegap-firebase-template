@@ -38,9 +38,16 @@ var oApp = oApp || {};
 
             firebaseSignIn = firebase.auth().signInWithCredential(credential)
                 .resolve(function (value) {
+                    console.log('firebaseSignIn > resolve');
                     obj.dfd.resolve(value);
                 }).catch(function (error) {
                     obj.dfd.reject(error);
+                }).then(function (value) {
+                    console.log('firebaseSignIn > then');
+                    obj.dfd.resolve(value);
+                }).done(function (value) {
+                    console.log('firebaseSignIn > done');
+                    obj.dfd.resolve(value);
                 });
         });
 
