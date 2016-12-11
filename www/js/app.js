@@ -66,8 +66,7 @@ var oApp = oApp || {};
 
     oApp.fb.runTest = function (test) {
 
-        var ts = (new Date()).getTime(),
-            callback,
+        var callback,
             data,
             email,
             password,
@@ -111,15 +110,15 @@ var oApp = oApp || {};
             if (string == '' || string == null) {
                 return false;
             }
-            task = oApp.fb.storage.string(ts + '.txt', string);
+            task = oApp.fb.storage.string(oApp.timers.ts() + '.txt', string);
             oApp.app.outputTestResults(task);
 
             break;
 
         case 'storage-photo':
             oApp.pg.camera.getPicture(false)
-                .done(function (imageData) {
-                    task = oApp.fb.storage.image(ts + '.jpg', imageData);
+                .done(function (data) {
+                    task = oApp.fb.storage.image(oApp.timers.ts() + '.jpg', data);
                     oApp.app.outputTestResults(task);
                 })
                 .fail(function (error) {
@@ -129,8 +128,12 @@ var oApp = oApp || {};
 
         case 'storage-gallery':
             oApp.pg.camera.getPicture(true)
-                .done(function (imageData) {
-                    task = oApp.fb.storage.image(ts + '.jpg', imageData);
+                .done(function (data) {
+                    if (data.extension !== undefined) {
+                        task = oApp.fb.storage.image(oApp.timers.ts() + '.' + data.extension, data.base64);
+                    } else {
+                        task = oApp.fb.storage.image(oApp.timers.ts() + '.jpg', data);
+                    }
                     oApp.app.outputTestResults(task);
                 })
                 .fail(function (error) {
@@ -146,7 +149,7 @@ var oApp = oApp || {};
 
             data = {
                 id: firebase.auth().currentUser.uid,
-                ts: (new Date()).getTime(),
+                ts: oApp.timers.ts(),
                 message: string
             };
 

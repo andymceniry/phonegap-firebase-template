@@ -68,21 +68,23 @@ var oApp = oApp || {};
 
         camera = camera !== false;
 
-        var obj = oApp.deferred.getDefaultObject();
+        oApp.core.readURLTempObject = oApp.deferred.getDefaultObject();
 
         if (navigator.camera === undefined) {
-            obj.dfd.reject('navigator.camera === undefined');
-            return obj.dfd.promise();
+            $('body').append('<input id="lofou" type="file" onchange="var k = oApp.core.getImageDataFromFileReader(this, oApp.core.readURLTempObject); " accept="image/gif, image/jpeg, image/jpg, image/png" />');
+            $('#lofou').trigger('click').remove();
+            //oApp.core.readURLTempObject.dfd.reject('navigator.camera === undefined');
+            return oApp.core.readURLTempObject.dfd.promise();
         }
 
-        obj.options = {
+        oApp.core.readURLTempObject.options = {
             sourceType: camera ? Camera.PictureSourceType.CAMERA : Camera.PictureSourceType.PHOTOLIBRARY,
             destinationType: Camera.DestinationType.DATA_URL
         };
 
-        navigator.camera.getPicture(obj.success, obj.error, obj.options);
+        navigator.camera.getPicture(oApp.core.readURLTempObject.success, oApp.core.readURLTempObject.error, oApp.core.readURLTempObject.options);
 
-        return obj.dfd.promise();
+        return oApp.core.readURLTempObject.dfd.promise();
     };
 
     oApp.pg.backbutton = function () {

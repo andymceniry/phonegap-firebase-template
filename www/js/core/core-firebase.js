@@ -7,178 +7,183 @@ var oApp = oApp || {};
 
 	'use strict';
 
-    oApp.fb = oApp.fb || {
-        auth: {
-            register: {},
-            signin: {}
+    oApp.fb = oApp.fb || {};
+
+    oApp.fb.auth = {
+
+        getUserObject: function (user) {
+
+            return {
+                'email': user.email,
+                'name': user.displayName,
+                'photoUrl': user.photoURL,
+                'uid': user.uid
+            };
+
         },
-        db: {},
-        storage: {}
-    };
 
-    oApp.fb.storage.monitor = function (task) {
-        task.on(firebase.storage.TaskEvent.STATE_CHANGED, function (snapshot) {
-            var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            oApp.fb.storage.progress = progress.toFixed(2);
-        }, function (error) {
-            oApp.fb.storage.progress = error;
-        }, function () {
-            oApp.fb.storage.progress = task.snapshot.downloadURL;
-        });
-    };
+        handleChange: function (user) {
+            console.groupEnd();
 
-    oApp.fb.storage.string = function (file, string) {
-
-        var obj = {
-            dfd: $.Deferred(),
-            success: function (success) {
-                obj.dfd.resolve(success);
-            },
-            error: function (error) {
-                obj.dfd.reject(error);
-            }
-        },
-            ref = firebase.storage().ref().child(file),
-            task = ref.putString(string);
-
-        task.then(function (success) {
-            obj.dfd.resolve(success.downloadURL);
-        });
-        oApp.fb.storage.monitor(task);
-
-        return obj.dfd.promise();
-    };
-
-    oApp.fb.storage.image = function (file, base64) {
-
-        var obj = {
-            dfd: $.Deferred(),
-            success: function (success) {
-                obj.dfd.resolve(success);
-            },
-            error: function (error) {
-                obj.dfd.reject(error);
+            if (user) {
+                console.groupCollapsed('User');
+                console.log(oApp.fb.auth.getUserObject(user));
+                console.groupEnd('User');
+            } else {
+                console.log('No user signed in');
             }
         },
 
-            ref = firebase.storage().ref().child(file),
-            task = ref.putString(base64, 'base64');
+        handleSigninPasswordFail: function (error) {
 
-        task.then(function (success) {
-            obj.dfd.resolve(success.downloadURL);
-        });
-        oApp.fb.storage.monitor(task);
+            oApp.core.alert(error.message, null, error.code);
+        },
 
-        return obj.dfd.promise();
+        register: {
 
-    };
+            password: function (email, password) {
 
-    oApp.fb.auth.setUpListener = function () {
+                var obj = oApp.deferred.getDefaultObject();
 
-        firebase.auth().onAuthStateChanged(function (user) {
-            oApp.fb.handleAuthChange(user);
-        });
+                firebase.auth().createUserWithEmailAndPassword(email, password)
+                    .then(function (success) {
+                        obj.dfd.resolve(success);
+                    })
+                    .catch(function (error) {
+                        obj.dfd.reject(error);
+                    });
 
-    };
+                return obj.dfd.promise();
+            }
 
-    oApp.fb.auth.register.password = function (email, password) {
+        },
 
-        var obj = oApp.deferred.getDefaultObject();
+        setUpListener: function () {
 
-        firebase.auth().createUserWithEmailAndPassword(email, password)
-            .then(function (success) {
-                obj.dfd.resolve(success);
-            })
-            .catch(function (error) {
-                obj.dfd.reject(error);
+            firebase.auth().onAuthStateChanged(function (user) {
+                oApp.fb.auth.handleChange(user);
             });
+        },
 
-        return obj.dfd.promise();
+        signin: {
 
-    };
+            password: function (email, password) {
 
-    oApp.fb.auth.signin.password = function (email, password) {
+                var obj = oApp.deferred.getDefaultObject();
 
-        var obj = oApp.deferred.getDefaultObject();
+                firebase.auth().signInWithEmailAndPassword(email, password)
+                    .then(function (success) {
+                        obj.dfd.resolve(success);
+                    })
+                    .catch(function (error) {
+                        obj.dfd.reject(error);
+                    });
 
-        firebase.auth().signInWithEmailAndPassword(email, password)
-            .then(function (success) {
-                obj.dfd.resolve(success);
-            })
-            .catch(function (error) {
-                obj.dfd.reject(error);
-            });
+                return obj.dfd.promise();
+            }
 
-        return obj.dfd.promise();
+        },
 
-    };
+        signout: function () {
 
-    oApp.fb.auth.handleSigninPasswordFail = function (error) {
-        oApp.core.alert(error.message, null, error.code);
-    }
+            var obj = oApp.deferred.getDefaultObject();
 
-    oApp.fb.auth.signout = function () {
+            firebase.auth().signOut()
+                .then(function (success) {
+                    obj.dfd.resolve(success);
+                })
+                .catch(function (error) {
+                    obj.dfd.reject(error);
+                });
 
-        var obj = oApp.deferred.getDefaultObject();
+            return obj.dfd.promise();
+        },
 
-        firebase.auth().signOut()
-            .then(function (success) {
-                obj.dfd.resolve(success);
-            })
-            .catch(function (error) {
-                obj.dfd.reject(error);
-            });
+        user: function () {
 
-        return obj.dfd.promise();
-
-    };
-
-    oApp.fb.auth.user = function () {
-
-        return firebase.auth().currentUser;
-
-    };
-
-    oApp.fb.db.addToList = function (path, data) {
-
-        var dbRef = oApp.fb.dbo.ref(path),
-            newPostRef = dbRef.push();
-
-        newPostRef.set(data);
-
-        return newPostRef;
-
-    };
-
-    oApp.fb.db.viewList = function (path, callback) {
-
-        var dbRef = oApp.fb.dbo.ref(path);
-
-        dbRef.on('value', callback);
-
-    };
-
-    oApp.fb.handleAuthChange = function (user) {
-        console.groupEnd();
-
-        if (user) {
-            console.groupCollapsed('User');
-            console.log(oApp.fb.getUserObject(user));
-            console.groupEnd('User');
-        } else {
-            console.log('No user signed in');
+            return firebase.auth().currentUser;
         }
 
     };
 
-    oApp.fb.getUserObject = function (user) {
+    oApp.fb.db = {
 
-        return {
-            'email': user.email,
-            'name': user.displayName,
-            'photoUrl': user.photoURL,
-            'uid': user.uid
-        };
+        addToList: function (path, data) {
+
+            var dbRef = oApp.fb.dbo.ref(path),
+                newPostRef = dbRef.push();
+
+            newPostRef.set(data);
+
+            return newPostRef;
+        },
+
+        viewList: function (path, callback) {
+
+            var dbRef = oApp.fb.dbo.ref(path);
+
+            dbRef.on('value', callback);
+        }
+
+    };
+
+    oApp.fb.storage = {
+
+        image: function (file, base64) {
+
+            var obj = {
+                dfd: $.Deferred(),
+                success: function (success) {
+                    obj.dfd.resolve(success);
+                },
+                error: function (error) {
+                    obj.dfd.reject(error);
+                }
+            },
+
+                ref = firebase.storage().ref().child(file),
+                task = ref.putString(base64, 'base64');
+
+            task.then(function (success) {
+                obj.dfd.resolve(success.downloadURL);
+            });
+            oApp.fb.storage.monitor(task);
+
+            return obj.dfd.promise();
+        },
+
+        monitor: function (task) {
+            task.on(firebase.storage.TaskEvent.STATE_CHANGED, function (snapshot) {
+                var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                oApp.fb.storage.progress = progress.toFixed(2);
+            }, function (error) {
+                oApp.fb.storage.progress = error;
+            }, function () {
+                oApp.fb.storage.progress = task.snapshot.downloadURL;
+            });
+        },
+
+        string: function (file, string) {
+
+            var obj = {
+                dfd: $.Deferred(),
+                success: function (success) {
+                    obj.dfd.resolve(success);
+                },
+                error: function (error) {
+                    obj.dfd.reject(error);
+                }
+            },
+                ref = firebase.storage().ref().child(file),
+                task = ref.putString(string);
+
+            task.then(function (success) {
+                obj.dfd.resolve(success.downloadURL);
+            });
+            oApp.fb.storage.monitor(task);
+
+            return obj.dfd.promise();
+        }
 
     };
 

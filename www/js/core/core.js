@@ -1,4 +1,4 @@
-/*global $, firebase*/
+/*global $, FileReader, firebase*/
 /*jslint eqeq:true plusplus:true*/
 
 var oApp = oApp || {};
@@ -23,7 +23,12 @@ var oApp = oApp || {};
     oApp.timers = {
         intervals: {},
         timeouts: {},
-        timestamps: {}
+        timestamps: {
+            pageLoad: (new Date()).getTime()
+        },
+        ts: function () {
+            return (new Date()).getTime();
+        }
     };
 
     oApp.core.storage.set = function (key, value, session) {
@@ -389,6 +394,23 @@ var oApp = oApp || {};
             if (alertCallback !== undefined && alertCallback !== null) {
                 alertCallback();
             }
+        }
+    };
+
+    oApp.core.getImageDataFromFileReader = function (input, obj) {
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                var regex = /\/(.*);/,
+                    data = {
+                        extension: regex.exec(e.target.result)[1],
+                        base64: e.target.result.split(',').pop()
+                    };
+                obj.dfd.resolve(data);
+            };
+            reader.readAsDataURL(input.files[0]);
         }
     };
 

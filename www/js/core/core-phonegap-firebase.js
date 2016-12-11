@@ -12,8 +12,7 @@ var oApp = oApp || {};
     oApp.pgfb.googleSignIn = function () {
 
         var obj = oApp.deferred.getDefaultObject(),
-            googleAuth,
-            firebaseSignIn;
+            googleAuth;
 
         if (oApp.config.gapi.client_id === undefined) {
             obj.dfd.reject('No Google Client Id supplied');

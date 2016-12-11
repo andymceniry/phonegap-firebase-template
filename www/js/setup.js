@@ -12,7 +12,7 @@ var oApp = oApp || {};
     oApp.config.app = {
         startPage: 'home',
         splashFadeSpeed: 500,
-        splashShowLength: 2000
+        splashShowLength: 200
     };
 
     oApp.config.fb = {
