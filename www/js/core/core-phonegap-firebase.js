@@ -11,25 +11,25 @@ var oApp = oApp || {};
 
     oApp.pgfb.googleSignIn = function () {
 
-        var obj = oApp.getDefaultDeferredObject(),
+        var obj = oApp.deferred.getDefaultObject(),
             googleAuth,
             firebaseSignIn;
 
-        if (oApp.configs.gapi.client_id === undefined) {
+        if (oApp.config.gapi.client_id === undefined) {
             obj.dfd.reject('No Google Client Id supplied');
             return false;
         }
 
-        if (oApp.configs.gapi.client_secret === undefined) {
+        if (oApp.config.gapi.client_secret === undefined) {
             obj.dfd.reject('No Google Client Secret supplied');
             return false;
         }
 
         googleAuth = oApp.gapi.googleapi.authorize({
-            client_id: oApp.configs.gapi.client_id,
-            client_secret: oApp.configs.gapi.client_secret,
-            redirect_uri: oApp.configs.gapi.redirect_uri || 'http://localhost',
-            scope: oApp.configs.gapi.scope || 'profile email'
+            client_id: oApp.config.gapi.client_id,
+            client_secret: oApp.config.gapi.client_secret,
+            redirect_uri: oApp.config.gapi.redirect_uri || 'http://localhost',
+            scope: oApp.config.gapi.scope || 'profile email'
         });
 
         googleAuth.done(function (data) {

@@ -1,16 +1,14 @@
 /*global $*/
 /*jslint eqeq:true plusplus:true*/
 
-var oApp = oApp || {};
-
 (function () {
 
 	'use strict';
 
-    oApp.php = oApp.php || {};
+    oApp.core.php = oApp.core.php || {};
 
     //  http://locutus.io/php/datetime/date/
-    oApp.php.date = function (format, timestamp) {
+    oApp.core.php.date = function (format, timestamp) {
         var jsdate,f,txtWords=['Sun','Mon','Tues','Wednes','Thurs','Fri','Satur','January','February','March','April','May','June','July','August','September','October','November','December'],
         formatChr=/\\?(.?)/gi,formatChrCb=function(t,s){return f[t]?f[t]():s},_pad=function(n,c){n=String(n);while(n.length<c){n='0'+n};return n}
         f={d:function(){return _pad(f.j(),2)},D:function(){return f.l().slice(0,3)},j:function(){return jsdate.getDate()},l:function(){return txtWords[f.w()]+'day'},N:function(){return f.w()||7},S:function(){var j=f.j()

@@ -19,15 +19,15 @@ var oApp = oApp || {};
     oApp.fb.storage.monitor = function (task) {
         task.on(firebase.storage.TaskEvent.STATE_CHANGED, function (snapshot) {
             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log('Upload is ' + progress.toFixed(2) + '% done');
+            oApp.fb.storage.progress = progress.toFixed(2);
         }, function (error) {
-            console.log('Error: ', error);
+            oApp.fb.storage.progress = error;
         }, function () {
-            console.log('Download URL: ', task.snapshot.downloadURL);
+            oApp.fb.storage.progress = task.snapshot.downloadURL;
         });
     };
 
-    oApp.fb.storage.putString = function (file, string) {
+    oApp.fb.storage.string = function (file, string) {
 
         var obj = {
             dfd: $.Deferred(),
@@ -42,14 +42,14 @@ var oApp = oApp || {};
             task = ref.putString(string);
 
         task.then(function (success) {
-            obj.dfd.resolve(success);
+            obj.dfd.resolve(success.downloadURL);
         });
         oApp.fb.storage.monitor(task);
 
         return obj.dfd.promise();
     };
 
-    oApp.fb.storeBase64 = function (file, base64) {
+    oApp.fb.storage.image = function (file, base64) {
 
         var obj = {
             dfd: $.Deferred(),
@@ -65,7 +65,7 @@ var oApp = oApp || {};
             task = ref.putString(base64, 'base64');
 
         task.then(function (success) {
-            obj.dfd.resolve(success);
+            obj.dfd.resolve(success.downloadURL);
         });
         oApp.fb.storage.monitor(task);
 
@@ -76,14 +76,14 @@ var oApp = oApp || {};
     oApp.fb.auth.setUpListener = function () {
 
         firebase.auth().onAuthStateChanged(function (user) {
-            oApp.handleAuthChange(user);
+            oApp.fb.handleAuthChange(user);
         });
 
     };
 
     oApp.fb.auth.register.password = function (email, password) {
 
-        var obj = oApp.getDefaultDeferredObject();
+        var obj = oApp.deferred.getDefaultObject();
 
         firebase.auth().createUserWithEmailAndPassword(email, password)
             .then(function (success) {
@@ -99,7 +99,7 @@ var oApp = oApp || {};
 
     oApp.fb.auth.signin.password = function (email, password) {
 
-        var obj = oApp.getDefaultDeferredObject();
+        var obj = oApp.deferred.getDefaultObject();
 
         firebase.auth().signInWithEmailAndPassword(email, password)
             .then(function (success) {
@@ -114,12 +114,12 @@ var oApp = oApp || {};
     };
 
     oApp.fb.auth.handleSigninPasswordFail = function (error) {
-        oApp.alert(error.message, null, error.code);
+        oApp.core.alert(error.message, null, error.code);
     }
 
     oApp.fb.auth.signout = function () {
 
-        var obj = oApp.getDefaultDeferredObject();
+        var obj = oApp.deferred.getDefaultObject();
 
         firebase.auth().signOut()
             .then(function (success) {
@@ -155,6 +155,30 @@ var oApp = oApp || {};
         var dbRef = oApp.fb.dbo.ref(path);
 
         dbRef.on('value', callback);
+
+    };
+
+    oApp.fb.handleAuthChange = function (user) {
+        console.groupEnd();
+
+        if (user) {
+            console.groupCollapsed('User');
+            console.log(oApp.fb.getUserObject(user));
+            console.groupEnd('User');
+        } else {
+            console.log('No user signed in');
+        }
+
+    };
+
+    oApp.fb.getUserObject = function (user) {
+
+        return {
+            'email': user.email,
+            'name': user.displayName,
+            'photoUrl': user.photoURL,
+            'uid': user.uid
+        };
 
     };
 

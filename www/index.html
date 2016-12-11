@@ -68,7 +68,8 @@
                     <span data-type="fb" data-item="authentication-signin-password">Sign in</span>
                     <span data-type="fb" data-item="authentication-signout">Sign out</span></li>
                 <li><b>Storage:</b><span data-type="fb" data-item="storage-string">Text</span>
-                    <span data-type="fb" data-item="storage-image">Image</span></li>
+                    <span data-type="fb" data-item="storage-photo">Photo</span>
+                    <span data-type="fb" data-item="storage-gallery">Gallery</span></li>
 
                 <li><b>Database:</b><span data-type="fb" data-item="database-write">Write</span>
                     <span data-type="fb" data-item="database-read">Read</span></li>
@@ -102,8 +103,8 @@
         <script src="js/app.js"></script>
         <script src="cordova.js"></script>
         <script>
-            oApp.waitForPhonegapToLoad = (function () {
-                document.addEventListener('deviceready', oApp.initPGFB, false);
+            oApp.app.waitForPhonegapToLoad = (function () {
+                document.addEventListener('deviceready', oApp.init.pgfb, false);
             }());
         </script>
 

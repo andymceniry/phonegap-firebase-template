@@ -1,4 +1,4 @@
 //  this file will be replaced when app built by phonegap
-//  phonegaps ready callback will run the initPGFB function
+//  phonegaps ready callback will run the pgfb init function
 //  we pass 'false' to indicate phonegap is not available
-oApp.initPGFB(false);
+oApp.init.pgfb(false);

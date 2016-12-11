@@ -7,32 +7,21 @@ var oApp = oApp || {};
 
 	'use strict';
 
-    oApp.init = function () {
+    oApp.app = {};
+
+    oApp.init.app = function () {
         console.log('initialising app');
 
-        if (oApp.phonegapAvailable) {
+        if (oApp.core.pgActive) {
             $('#divPhonegapReg').html('Phonegap is now ready to use :-)');
             console.log('phonegap loaded');
         } else {
             $('#divPhonegapReg').html('Phonegap is not available :-(');
         }
 
-        oApp.waitForSplashEndThenShowStartPage();
+        oApp.core.waitForSplashEndThenShowStartPage();
 
     };
-
-    oApp.getAndSetDefaultStorageObject = function () {
-
-        var obj = {
-            id: (new Date()).getTime()
-        };
-
-        oApp.storage.set(oApp.storage.name, obj);
-
-        return obj;
-
-    };
-
 
     oApp.pg.runTest = function (test) {
 
@@ -42,22 +31,22 @@ var oApp = oApp || {};
 
         case 'connection':
             task = oApp.pg.connection.getDetails();
-            oApp.outputTestResults(task, true);
+            oApp.app.outputTestResults(task, true);
             break;
 
         case 'device':
             task = oApp.pg.device.getDetails();
-            oApp.outputTestResults(task, true);
+            oApp.app.outputTestResults(task, true);
             break;
 
         case 'geolocation-short':
             task = oApp.pg.geolocation.getCurrentPosition(false);
-            oApp.outputTestResults(task, true);
+            oApp.app.outputTestResults(task, true);
             break;
 
         case 'geolocation-full':
             task = oApp.pg.geolocation.getCurrentPosition();
-            oApp.outputTestResults(task, true);
+            oApp.app.outputTestResults(task, true);
             break;
 
         case 'camera-photo':
@@ -97,7 +86,7 @@ var oApp = oApp || {};
                 return false;
             }
             task = oApp.fb.auth.register.password(email, password);
-            oApp.outputTestResults(task, true);
+            oApp.app.outputTestResults(task, true);
             break;
 
         case 'authentication-signin-password':
@@ -110,11 +99,11 @@ var oApp = oApp || {};
                 return false;
             }
             task = oApp.fb.auth.signin.password(email, password);
-            oApp.outputTestResults(task, true);
+            oApp.app.outputTestResults(task, true);
             break;
 
         case 'authentication-signout':
-            oApp.confirm('Sign out - Are you sure?', oApp.handleConfirmSignOut);
+            oApp.core.confirm('Sign out - Are you sure?', oApp.app.handleConfirmSignOut);
             break;
 
         case 'storage-string':
@@ -122,16 +111,27 @@ var oApp = oApp || {};
             if (string == '' || string == null) {
                 return false;
             }
-            task = oApp.fb.storage.putString(ts + '.txt', string);
-            oApp.outputTestResults(task);
+            task = oApp.fb.storage.string(ts + '.txt', string);
+            oApp.app.outputTestResults(task);
 
             break;
 
-        case 'storage-image':
+        case 'storage-photo':
             oApp.pg.camera.getPicture(false)
                 .done(function (imageData) {
-                    task = oApp.fb.storeBase64(ts + '.jpg', imageData);
-                    oApp.outputTestResults(task);
+                    task = oApp.fb.storage.image(ts + '.jpg', imageData);
+                    oApp.app.outputTestResults(task);
+                })
+                .fail(function (error) {
+                    console.log(error);
+                });
+            break;
+
+        case 'storage-gallery':
+            oApp.pg.camera.getPicture(true)
+                .done(function (imageData) {
+                    task = oApp.fb.storage.image(ts + '.jpg', imageData);
+                    oApp.app.outputTestResults(task);
                 })
                 .fail(function (error) {
                     console.log(error);
@@ -165,13 +165,13 @@ var oApp = oApp || {};
 
                 for (i in items) {
                     if (items.hasOwnProperty(i)) {
-                        console.log(oApp.php.date('d.m.y @ H:i:s', items[i].ts / 1000) + ': ' + items[i].message);
+                        console.log(oApp.core.php.date('d.m.y @ H:i:s', items[i].ts / 1000) + ': ' + items[i].message);
                     }
                 }
             };
 
             oApp.fb.db.viewList('messages/', callback);
-            oApp.openLog();
+            oApp.core.console.open();
 
             break;
 
@@ -191,18 +191,18 @@ var oApp = oApp || {};
 
     };
 
-    oApp.runTest = function (test) {
+    oApp.app.runTest = function (test) {
 
         switch (test) {
 
         case 'browser-location':
             console.log(location);
-            oApp.openLog();
+            oApp.core.console.open();
             break;
 
         case 'browser-navigator':
             console.log(navigator);
-            oApp.openLog();
+            oApp.core.console.open();
             break;
 
         }
@@ -234,14 +234,14 @@ var oApp = oApp || {};
             break;
 
         case 'misc':
-            oApp.runTest(item);
+            oApp.app.runTest(item);
             break;
 
         }
 
     });
 
-    oApp.outputTestResults = function (test, autoShow) {
+    oApp.app.outputTestResults = function (test, autoShow) {
 
         autoShow = autoShow === true;
 
@@ -254,15 +254,15 @@ var oApp = oApp || {};
             });
 
         if (autoShow) {
-            oApp.openLog();
+            oApp.core.console.open();
         }
     };
 
-    oApp.handleConfirmSignOut = function (button) {
+    oApp.app.handleConfirmSignOut = function (button) {
         switch (button) {
         case 1:
             oApp.fb.auth.signout();
-            oApp.showPage('signin');
+            oApp.core.showPage('signin');
             break;
         }
     };

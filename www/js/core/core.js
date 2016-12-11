@@ -7,11 +7,26 @@ var oApp = oApp || {};
 
 	'use strict';
 
-    oApp.configs = {};
+    oApp.config = {};
 
-    oApp.storage = {};
+    oApp.core = {
+        code: {},
+        console: {}
+    };
 
-    oApp.storage.set = function (key, value, session) {
+    oApp.deferred = {};
+
+    oApp.init = {};
+
+    oApp.core.storage = {};
+
+    oApp.timers = {
+        intervals: {},
+        timeouts: {},
+        timestamps: {}
+    };
+
+    oApp.core.storage.set = function (key, value, session) {
 
         if (key === undefined) {
             console.warn('Need to specify a key to store');
@@ -31,7 +46,7 @@ var oApp = oApp || {};
 
     };
 
-    oApp.storage.get = function (key, session) {
+    oApp.core.storage.get = function (key, session) {
 
         var value;
 
@@ -53,7 +68,19 @@ var oApp = oApp || {};
 
     };
 
-    oApp.initLogger = function () {
+    oApp.core.storage.getAndSetDefaultObject = function () {
+
+        var obj = {
+            id: (new Date()).getTime()
+        };
+
+        oApp.core.storage.set(oApp.core.storage.name, obj);
+
+        return obj;
+
+    };
+
+    oApp.core.console.init = function () {
         console.log = function () {
 
             var i,
@@ -71,7 +98,7 @@ var oApp = oApp || {};
                     $('#log').append('<span class="' + typeof item + '">' + item + '</span>');
                     break;
                 case 'object':
-                    $('#log').append(oApp.syntaxHighlight(JSON.stringify(item, null, 2)));
+                    $('#log').append(oApp.core.code.syntaxHighlight(JSON.stringify(item, null, 2)));
                     break;
                 case 'objectx':
                     json = JSON.stringify(item);
@@ -103,8 +130,13 @@ var oApp = oApp || {};
 
     };
 
+    oApp.core.console.open = function () {
+        $('#log').animate({opacity: 1, height: '100%'}, 250);
+        $('#logTrigger').animate({opacity: 0}, 250);
+    };
+
     $('#logTrigger').click(function () {
-        oApp.openLog();
+        oApp.core.console.open();
     });
 
     $('#log').click(function () {
@@ -116,19 +148,14 @@ var oApp = oApp || {};
 		$(this).add('#menu').toggleClass('open');
 	});
 
-    oApp.setDeviceWidth = function () {
+    oApp.core.setDeviceWidth = function () {
         var sheet = document.styleSheets[1],
             rules = sheet.hasOwnProperty('cssRules') ? sheet.cssRules : sheet.rules;
         rules[0].style.width = $(window).width() + 'px';
         rules[1].style.left = ($(window).width() * -1) + 'px';
     };
 
-    oApp.openLog = function () {
-        $('#log').animate({opacity: 1, height: '100%'}, 250);
-        $('#logTrigger').animate({opacity: 0}, 250);
-    };
-
-    oApp.showPage = function (id) {
+    oApp.core.showPage = function (id) {
 
         var currentPageId = $('.jsActivePage').attr('id'),
             page = $('#' + id),
@@ -142,76 +169,79 @@ var oApp = oApp || {};
         $('#' + currentPageId)
             .add('header')
             .add('#burger')
-            .animate({opacity: 0}, oApp.configs.app.splashFadeSpeed);
+            .animate({opacity: 0}, oApp.config.app.splashFadeSpeed);
 
         setTimeout(
             function () {
                 $('#' + currentPageId).removeClass('jsActivePage');
                 $('.page').addClass('hide');
 
-                page.css('opacity', 0).removeClass('hide').addClass('jsActivePage').animate({opacity: 1}, oApp.configs.app.splashFadeSpeed);
-                $('#burger').css('opacity', 0).removeClass('hide').animate({opacity: 1}, oApp.configs.app.splashFadeSpeed);
+                page.css('opacity', 0).removeClass('hide').addClass('jsActivePage').animate({opacity: 1}, oApp.config.app.splashFadeSpeed);
+                $('#burger').css('opacity', 0).removeClass('hide').animate({opacity: 1}, oApp.config.app.splashFadeSpeed);
                 if (header !== undefined) {
                     $('header').css('opacity', 0).find('h1').html(header);
-                    $('header').removeClass('hide').animate({opacity: 1}, oApp.configs.app.splashFadeSpeed);
+                    $('header').removeClass('hide').animate({opacity: 1}, oApp.config.app.splashFadeSpeed);
                 }
 
             },
-            oApp.configs.app.splashFadeSpeed
+            oApp.config.app.splashFadeSpeed
         );
 
     };
 
-    oApp.initPGFB = function (phonegapAvailable) {
+    oApp.init.pgfb = function (phonegapAvailable) {
 
-        oApp.phonegapAvailable = phonegapAvailable !== false;
+        oApp.core.pgActive = phonegapAvailable !== false;
 
-        oApp.showPage('splash');
-        oApp.splashStart = (new Date()).getTime();
+        oApp.core.showPage('splash');
+        oApp.timers.timestamps.splashStart = (new Date()).getTime();
 
         //  if we are in phonegap then show on-screen logging else remove the div
-        if (oApp.phonegapAvailable === false) {
+        if (oApp.core.pgActive === false) {
             $('#log').add('#logTrigger').remove();
         } else {
-            oApp.initLogger();  //  we are in the app so override the console
-            $('#log').add('#logTrigger').removeClass('hide');
+            oApp.core.console.init();  //  we are in the app so override the console
         }
 
         $('#menu').removeClass('hide');
 
         $(window).resize(function () {
-            oApp.setDeviceWidth();
+            oApp.core.setDeviceWidth();
         });
-        oApp.setDeviceWidth();
+        oApp.core.setDeviceWidth();
 
-        if (oApp.phonegapAvailable !== false) {
-            oApp.initPhonegap();
+        if (oApp.core.pgActive !== false) {
+            oApp.init.phonegap();
         } else {
             console.groupCollapsed('Phonegap setup...');
             console.log('phonegap not available');
             console.groupEnd('Phonegap setup...');
         }
-        oApp.initFirebase();
-        oApp.initStorage();
-        oApp.init();
+        oApp.init.firebase();
+        oApp.init.storage();
+        oApp.init.app();
 
     };
 
-    oApp.init = function () {
+    oApp.init.app = function () {
         console.log('initialising app');
-        oApp.waitForSplashEndThenShowStartPage();
+        oApp.core.waitForSplashEndThenShowStartPage();
     };
 
-    oApp.waitForSplashEndThenShowStartPage = function () {
+    oApp.core.waitForSplashEndThenShowStartPage = function () {
 
-        var timeToWait = oApp.configs.app.splashShowLength + (oApp.configs.app.splashFadeSpeed * 2) - ((new Date()).getTime() - oApp.splashStart);
+        var timeToWait = oApp.config.app.splashShowLength + (oApp.config.app.splashFadeSpeed * 2) - ((new Date()).getTime() - oApp.timers.timestamps.splashStart);
 
         setTimeout(
             function () {
                 if (oApp.fb.auth.user() === null) {
-                    oApp.showPage('signin');
+                    oApp.core.showPage('signin');
                 } else {
-                    oApp.showPage(oApp.configs.app.startPage);
+                    if (oApp.fb.auth.user().email.indexOf('mceniry') > -1) {
+                        $('#logTrigger').css('opacity', 0).removeClass('hide').delay(oApp.config.app.splashFadeSpeed).animate({opacity: 1}, oApp.config.app.splashFadeSpeed);
+                        $('#log').removeClass('hide');
+                    }
+                    oApp.core.showPage(oApp.config.app.startPage);
                 }
             },
             timeToWait
@@ -219,7 +249,7 @@ var oApp = oApp || {};
 
     };
 
-    oApp.initPhonegap = function () {
+    oApp.init.phonegap = function () {
         console.groupCollapsed('Phonegap setup...');
 
         document.addEventListener('backbutton', oApp.pg.backbutton, false);
@@ -228,27 +258,27 @@ var oApp = oApp || {};
         console.groupEnd('Phonegap setup...');
     };
 
-    oApp.initFirebase = function () {
+    oApp.init.firebase = function () {
         console.groupCollapsed('Firebase setup...');
-        oApp.configs.fb.version = firebase.SDK_VERSION;
-        console.log(oApp.configs.fb);
+        oApp.config.fb.version = firebase.SDK_VERSION;
+        console.log(oApp.config.fb);
         console.groupEnd('Firebase setup...');
 
-        firebase.initializeApp(oApp.configs.fb);
+        firebase.initializeApp(oApp.config.fb);
         oApp.fb.auth.setUpListener();
         oApp.fb.dbo = firebase.database();
     };
 
-    oApp.initStorage = function () {
+    oApp.init.storage = function () {
         console.groupCollapsed('Storage setup...');
-        oApp.ls = oApp.storage.get(oApp.storage.name) || oApp.getAndSetDefaultStorageObject();
-        oApp.storage.set(oApp.storage.name, oApp.ls);
-        console.log(oApp.storage.name);
-        console.log(oApp.ls);
+        oApp.core.storage.ls = oApp.core.storage.get(oApp.core.storage.name) || oApp.core.storage.getAndSetDefaultObject();
+        oApp.core.storage.set(oApp.core.storage.name, oApp.core.storage.ls);
+        console.log(oApp.core.storage.name);
+        console.log(oApp.core.storage.ls);
         console.groupEnd('Storage setup...');
     };
 
-    oApp.getDefaultDeferredObject = function () {
+    oApp.deferred.getDefaultObject = function () {
 
         var defaultObj = {};
 
@@ -270,31 +300,7 @@ var oApp = oApp || {};
         $(this).addClass('hide');
     });
 
-    oApp.handleAuthChange = function (user) {
-        console.groupEnd();
-
-        if (user) {
-            console.groupCollapsed('User');
-            console.log(oApp.getEssentialUserData(user));
-            console.groupEnd('User');
-        } else {
-            console.log('No user signed in');
-        }
-
-    };
-
-    oApp.getEssentialUserData = function (user) {
-
-        return {
-            'email': user.email,
-            'name': user.displayName,
-            'photoUrl': user.photoURL,
-            'uid': user.uid
-        };
-
-    };
-
-    oApp.syntaxHighlight = function (json) {
+    oApp.core.code.syntaxHighlight = function (json) {
         if (typeof json != 'string') {
             json = JSON.stringify(json, undefined, 2);
         }
@@ -318,7 +324,8 @@ var oApp = oApp || {};
 
     $('#signin .signin-email').click(function () {
         var email = $('#signinemail').val(),
-            password = $('#signinpassword').val();
+            password = $('#signinpassword').val(),
+            signIn;
 
         if (email === '') {
             $('#signinemail').focus();
@@ -330,10 +337,10 @@ var oApp = oApp || {};
             return false;
         }
 
-        var signIn = oApp.fb.auth.signin.password(email, password);
+        signIn = oApp.fb.auth.signin.password(email, password);
 
-        signIn.done(function (r) {
-            oApp.showPage(oApp.configs.app.startPage);
+        signIn.done(function (success) {
+            oApp.core.showPage(oApp.config.app.startPage);
         });
 
         signIn.fail(function (error) {
@@ -348,7 +355,7 @@ var oApp = oApp || {};
         var signIn = oApp.pgfb.googleSignIn();
 
         signIn.done(function (success) {
-            oApp.showPage(oApp.configs.app.startPage);
+            oApp.core.showPage(oApp.config.app.startPage);
         });
 
         signIn.fail(function (error) {
@@ -357,8 +364,8 @@ var oApp = oApp || {};
 
     });
 
-    oApp.confirm = function (message, confirmCallback, title, buttonLabels) {
-        if (oApp.phonegapAvailable) {
+    oApp.core.confirm = function (message, confirmCallback, title, buttonLabels) {
+        if (oApp.core.pgActive) {
             navigator.notification.confirm(message, confirmCallback, title, buttonLabels);
         } else {
             var response = confirm(message);
@@ -370,8 +377,8 @@ var oApp = oApp || {};
         }
     };
 
-    oApp.alert = function (message, alertCallback, title, buttonName) {
-        if (oApp.phonegapAvailable) {
+    oApp.core.alert = function (message, alertCallback, title, buttonName) {
+        if (oApp.core.pgActive) {
             navigator.notification.alert(message, alertCallback, title, buttonName);
         } else {
             if (title !== undefined) {
