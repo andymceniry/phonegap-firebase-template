@@ -116,7 +116,7 @@ var oApp = oApp || {};
             break;
 
         case 'storage-photo':
-            oApp.pg.camera.getPicture(false)
+            oApp.pg.camera.getPicture()
                 .done(function (data) {
                     task = oApp.fb.storage.image(oApp.timers.ts() + '.jpg', data);
                     oApp.app.outputTestResults(task);
@@ -127,7 +127,7 @@ var oApp = oApp || {};
             break;
 
         case 'storage-gallery':
-            oApp.pg.camera.getPicture(true)
+            oApp.pg.camera.getPicture(false)
                 .done(function (data) {
                     if (data.extension !== undefined) {
                         task = oApp.fb.storage.image(oApp.timers.ts() + '.' + data.extension, data.base64);

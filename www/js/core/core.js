@@ -31,6 +31,8 @@ var oApp = oApp || {};
         }
     };
 
+    oApp.tmp = {};
+
     oApp.core.storage.set = function (key, value, session) {
 
         if (key === undefined) {

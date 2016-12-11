@@ -68,23 +68,26 @@ var oApp = oApp || {};
 
         camera = camera !== false;
 
-        oApp.core.readURLTempObject = oApp.deferred.getDefaultObject();
+        oApp.tmp.getPicture = oApp.deferred.getDefaultObject();
 
         if (navigator.camera === undefined) {
-            $('body').append('<input id="lofou" type="file" onchange="var k = oApp.core.getImageDataFromFileReader(this, oApp.core.readURLTempObject); " accept="image/gif, image/jpeg, image/jpg, image/png" />');
-            $('#lofou').trigger('click').remove();
-            //oApp.core.readURLTempObject.dfd.reject('navigator.camera === undefined');
-            return oApp.core.readURLTempObject.dfd.promise();
+            if (camera === false) {
+                $('body').append('<input id="lofou" type="file" onchange="var k = oApp.core.getImageDataFromFileReader(this, oApp.tmp.getPicture); " accept="image/gif, image/jpeg, image/jpg, image/png" />');
+                $('#lofou').trigger('click').remove();
+            } else {
+                oApp.tmp.getPicture.dfd.reject('navigator.camera === undefined');
+            }
+            return oApp.tmp.getPicture.dfd.promise();
         }
 
-        oApp.core.readURLTempObject.options = {
+        oApp.tmp.getPicture.options = {
             sourceType: camera ? Camera.PictureSourceType.CAMERA : Camera.PictureSourceType.PHOTOLIBRARY,
             destinationType: Camera.DestinationType.DATA_URL
         };
 
-        navigator.camera.getPicture(oApp.core.readURLTempObject.success, oApp.core.readURLTempObject.error, oApp.core.readURLTempObject.options);
+        navigator.camera.getPicture(oApp.tmp.getPicture.success, oApp.tmp.getPicture.error, oApp.tmp.getPicture.options);
 
-        return oApp.core.readURLTempObject.dfd.promise();
+        return oApp.tmp.getPicture.dfd.promise();
     };
 
     oApp.pg.backbutton = function () {
