@@ -35,6 +35,21 @@ var oApp = oApp || {};
         return obj.dfd.promise();
     };
 
+    oApp.pg.compass.getDetails = function () {
+
+        var obj = oApp.deferred.getDefaultObject();
+
+        if (navigator.compass === undefined) {
+            obj.dfd.reject('navigator.compass === undefined');
+            return obj.dfd.promise();
+        }
+
+        navigator.compass.getCurrentHeading(obj.success, obj.error);
+
+        return obj.dfd.promise();
+
+    };
+
     oApp.pg.connection.getDetails = function () {
 
         var obj = oApp.deferred.getDefaultObject(),

@@ -29,6 +29,11 @@ var oApp = oApp || {};
 
         switch (test) {
 
+        case 'compass':
+            task = oApp.pg.compass.getDetails();
+            oApp.app.outputTestResults(task, true);
+            break;
+
         case 'connection':
             task = oApp.pg.connection.getDetails();
             oApp.app.outputTestResults(task, true);
